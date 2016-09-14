@@ -1,0 +1,15 @@
+SET( CXX_FILES
+  curves.cpp
+)
+SET( H_FILES
+  curves.h
+)
+
+SET( SOURCE_FILES ${CXX_FILES} ${H_FILES})
+
+ADD_LIBRARY( bezier ${SOURCE_FILES} )
+
+
+INSTALL(TARGETS bezier
+         ARCHIVE DESTINATION lib
+)
