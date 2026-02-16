@@ -5,63 +5,68 @@ from meshTools_maya.mesh_maya import *
 
 kPluginCmdName = "flowLoop"
 
+
 # Command
 class scriptedCommand(OpenMayaMPx.MPxCommand):
-	def __init__(self):
-		OpenMayaMPx.MPxCommand.__init__(self)
+    def __init__(self):
+        OpenMayaMPx.MPxCommand.__init__(self)
 
-	# Invoked when the command is run.
-	def doIt(self,argList):
-		print "doIt()"
-		
-		self.redoIt()
+    # Invoked when the command is run.
+    def doIt(self, argList):
+        print("doIt()")
 
-	def redoIt(self):
+        self.redoIt()
 
-		print "redoIt()"
-		self.dagModifier = OpenMaya.MDagModifier()
-		selectionList = OpenMaya.MSelectionList()
-		OpenMaya.MGlobal.getActiveSelectionList(selectionList)
-		dagPath = OpenMaya.MDagPath()
-		selectionList.getDagPath(0, dagPath)
-		m = MayaMesh(dag = dagPath,vertices=1,faces=1,edges=1,normals=1,build=1)
+    def redoIt(self):
 
-		edgeIt = OpenMaya.MItMeshEdge(dagPath)
-		selection = []
+        print("redoIt()")
+        self.dagModifier = OpenMaya.MDagModifier()
+        selectionList = OpenMaya.MSelectionList()
+        OpenMaya.MGlobal.getActiveSelectionList(selectionList)
+        dagPath = OpenMaya.MDagPath()
+        selectionList.getDagPath(0, dagPath)
+        m = MayaMesh(
+            dag=dagPath, vertices=1, faces=1, edges=1, normals=1, build=1
+        )
 
-		while not edgeIt.isDone():
-			if selectionList.hasItem(dagPath, edgeIt.currentItem()):
-				selection+=[edgeIt.index()]
-			edgeIt.next()
-		m.selectionType = kGeotype.edge
-		m.flowLoop(selection) 
+        edgeIt = OpenMaya.MItMeshEdge(dagPath)
+        selection = []
 
+        while not edgeIt.isDone():
+            if selectionList.hasItem(dagPath, edgeIt.currentItem()):
+                selection += [edgeIt.index()]
+            edgeIt.next()
+        m.selectionType = kGeotype.edge
+        m.flowLoop(selection)
 
-	def undoIt(self):
-		print "undoIt()"
-		self.dagModifier.undoIt()
+    def undoIt(self):
+        print("undoIt()")
+        self.dagModifier.undoIt()
 
-	def isUndoable(self):
-		print "isUndoable()"
-		return True
+    def isUndoable(self):
+        print("isUndoable()")
+        return True
+
 
 # Creator
 def cmdCreator():
-	return OpenMayaMPx.asMPxPtr( scriptedCommand() )
+    return OpenMayaMPx.asMPxPtr(scriptedCommand())
+
 
 # Initialize the script plug-in
 def initializePlugin(mobject):
-	mplugin = OpenMayaMPx.MFnPlugin(mobject)
-	try:
-		mplugin.registerCommand( kPluginCmdName, cmdCreator )
-	except:
-		sys.stderr.write( "Failed to register command: %s\n" % kPluginCmdName )
-		raise
+    mplugin = OpenMayaMPx.MFnPlugin(mobject)
+    try:
+        mplugin.registerCommand(kPluginCmdName, cmdCreator)
+    except Exception:
+        sys.stderr.write("Failed to register command: %s\n" % kPluginCmdName)
+        raise
+
 
 # Uninitialize the script plug-in
 def uninitializePlugin(mobject):
-	mplugin = OpenMayaMPx.MFnPlugin(mobject)
-	try:
-		mplugin.deregisterCommand( kPluginCmdName )
-	except:
-		sys.stderr.write( "Failed to unregister command: %s\n" % kPluginCmdName )
+    mplugin = OpenMayaMPx.MFnPlugin(mobject)
+    try:
+        mplugin.deregisterCommand(kPluginCmdName)
+    except Exception:
+        sys.stderr.write("Failed to unregister command: %s\n" % kPluginCmdName)
