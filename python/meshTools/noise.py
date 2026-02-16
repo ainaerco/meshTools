@@ -1,5 +1,6 @@
 from math import floor
-from noise_tabs import *
+
+from noise_tabs import grads2, grads3, grads4, perm
 
 TABMASK = 0xFF
 

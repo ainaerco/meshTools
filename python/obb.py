@@ -1,5 +1,6 @@
-from meshTools._geometry import *
 from math import degrees
+
+from meshTools.geometry import BBox, Transform, Vector
 import maya.cmds as cmds
 
 

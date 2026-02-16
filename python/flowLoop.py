@@ -1,7 +1,7 @@
 import sys
 import maya.OpenMaya as OpenMaya
 import maya.OpenMayaMPx as OpenMayaMPx
-from meshTools_maya.mesh_maya import *
+from meshTools_maya.mesh_maya import MayaMesh, kGeotype
 
 kPluginCmdName = "flowLoop"
 

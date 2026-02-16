@@ -1,5 +1,6 @@
+from geometry import Point, Vector
+
 debug = False
-from geometry import *
 
 
 class Vertex:

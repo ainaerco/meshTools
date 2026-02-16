@@ -98,15 +98,15 @@ class MayaTube:
                     profile_curve_fn.form() == OpenMaya.MFnNurbsCurve.kOpen
                 )
                 tile = MayaMesh(empty=1)
-                l = []
+                lst = []
                 for i in range(profile_curve_fn.numCVs()):
-                    l += [profile_curve_fn.knot(i)]
-                l = lists.group_duplicates(l)
+                    lst += [profile_curve_fn.knot(i)]
+                lst = lists.group_duplicates(lst)
                 tile.faces = [[]]
-                for i in range(len(l) - self.profile_closed):
+                for i in range(len(lst) - self.profile_closed):
                     try:
                         profile_curve_fn.getPointAtParam(
-                            l[i], point, OpenMaya.MSpace.kWorld
+                            lst[i], point, OpenMaya.MSpace.kWorld
                         )
                         tile.vertices += [Point(point)]
                         tile.faces[0] += [len(tile.vertices) - 1]
@@ -128,15 +128,15 @@ class MayaTube:
                     profile_curve_fn.form() == OpenMaya.MFnNurbsCurve.kOpen
                 )
                 tile = MayaMesh(empty=1)
-                l = []
+                lst = []
                 for i in range(profile_curve_fn.numCVs()):
-                    l += [profile_curve_fn.knot(i)]
-                l = lists.group_duplicates(l)
+                    lst += [profile_curve_fn.knot(i)]
+                lst = lists.group_duplicates(lst)
                 tile.faces = [[]]
-                for i in range(len(l) - self.profile_closed):
+                for i in range(len(lst) - self.profile_closed):
                     try:
                         profile_curve_fn.getPointAtParam(
-                            l[i], point, OpenMaya.MSpace.kWorld
+                            lst[i], point, OpenMaya.MSpace.kWorld
                         )
                         tile.vertices += [Point(point)]
                         tile.faces[0] += [len(tile.vertices) - 1]
@@ -147,10 +147,10 @@ class MayaTube:
             print("No input profile for MayaTube")
             return
 
-        l = []
+        lst = []
         for i in range(curve_fn.numCVs()):
-            l += [curve_fn.knot(i)]
-        l = lists.group_duplicates(l)
+            lst += [curve_fn.knot(i)]
+        lst = lists.group_duplicates(lst)
         nsegments = kwargs.get("segments", 5)
         fix = kwargs.get("fix", 0)
         t_translate = Transform()
@@ -163,20 +163,20 @@ class MayaTube:
         self.closed = curve_fn.form() == 3
 
         if reverse == 1:
-            l = l[::-1]
+            lst = lst[::-1]
             tile.vertices = tile.vertices[::-1]
         if even == 0:
             # in case of param distribution
             self.curve_length = 0
-            for i in range(len(l)):
+            for i in range(len(lst)):
                 try:
-                    print(l[i], point)
+                    print(lst[i], point)
                     curve_fn.getPointAtParam(
-                        l[i], point, OpenMaya.MSpace.kWorld
+                        lst[i], point, OpenMaya.MSpace.kWorld
                     )
                     self.knots += [
                         TubeSegment(
-                            parameter=l[i],
+                            parameter=lst[i],
                             origin=Vector(point.x, point.y, point.z),
                         )
                     ]
@@ -246,14 +246,14 @@ class MayaTube:
         else:
             # in case of even distribution
             self.curve_length = curve_fn.length()
-            for i in range(len(l)):
+            for i in range(len(lst)):
                 try:
                     curve_fn.getPointAtParam(
-                        l[i], point, OpenMaya.MSpace.kWorld
+                        lst[i], point, OpenMaya.MSpace.kWorld
                     )
                     self.knots += [
                         TubeSegment(
-                            parameter=l[i],
+                            parameter=lst[i],
                             origin=Vector(point.x, point.y, point.z),
                         )
                     ]
@@ -261,7 +261,7 @@ class MayaTube:
                         self.knots[-1].length_param = self.knots[
                             -2
                         ].length_param + self.measureSegment(
-                            curve_fn, l[i - 1], l[i], 100
+                            curve_fn, lst[i - 1], lst[i], 100
                         )
                 except Exception as e:
                     print("except knots even,%s" % e)

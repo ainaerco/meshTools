@@ -1,3 +1,13 @@
+import math
+import random
+
+import maya.OpenMaya as OpenMaya
+import maya.cmds as cmds
+
+from meshTools.geometry import BBox, Point, Transform, Vector, pointInPoly
+from mesh_maya import MayaMesh
+
+
 def tileScatter(
     self,
     copy_type="duplicate",

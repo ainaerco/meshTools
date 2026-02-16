@@ -3,15 +3,24 @@ import math  # degrees,tan,pi,sin,cos,modf
 from copy import copy
 from time import time
 
-from noise import *
-
-from geometry import *
+from geometry import (
+    BBox,
+    EPSILON,
+    OBBox,
+    Point,
+    Polygon,
+    Ray,
+    Transform,
+    Vector,
+    fit,
+    interpolateBezier,
+)
+from noise import Noise
 
 import lists
-
 from chull import Hull
-
-from delaunay import *
+from delaunay import Delaunay
+from lists import CycleList
 
 VERBOSE = 1
 # kLoad = lists.Enumeration("empty|vertices|faces|edges|normals|bbox|pivot")
@@ -126,32 +135,32 @@ class Mesh(object):
         def srt(k):
             if len(k) < 1:
                 return []
-            l = []
-            l.append(k[0])
+            lst = []
+            lst.append(k[0])
             m = []
             for i in range(0, len(k)):
                 for j in range(0, len(k)):
-                    if k[j] not in l:
-                        if l[len(l) - 1][1] == k[j][0]:
-                            l.append(k[j])
+                    if k[j] not in lst:
+                        if lst[len(lst) - 1][1] == k[j][0]:
+                            lst.append(k[j])
                             break
             for i in range(0, len(k)):
-                if k[i] not in l:
+                if k[i] not in lst:
                     m.append(k[i])
             n = []
-            n.append(l)
+            n.append(lst)
             n.extend(srt(m))
             return n
 
-        l = srt(border)
-        # print l
+        lst = srt(border)
+        # print lst
 
         # get first element only
         border_vertices = []
-        for i in range(0, len(l)):
+        for i in range(0, len(lst)):
             s = []
-            for j in range(0, len(l[i])):
-                s.append(l[i][j][0])
+            for j in range(0, len(lst[i])):
+                s.append(lst[i][j][0])
             border_vertices.append(s)
         return border_vertices
 
@@ -190,32 +199,32 @@ class Mesh(object):
         def srt(k):
             if len(k) < 1:
                 return []
-            l = []
-            l.append(k[0])
+            lst = []
+            lst.append(k[0])
             m = []
             for i in range(0, len(k)):
                 for j in range(0, len(k)):
-                    if k[j] not in l:
-                        if l[len(l) - 1][1] == k[j][0]:
-                            l.append(k[j])
+                    if k[j] not in lst:
+                        if lst[len(lst) - 1][1] == k[j][0]:
+                            lst.append(k[j])
                             break
             for i in range(0, len(k)):
-                if k[i] not in l:
+                if k[i] not in lst:
                     m.append(k[i])
             n = []
-            n.append(l)
+            n.append(lst)
             n.extend(srt(m))
             return n
 
-        l = srt(border)
-        # print l
+        lst = srt(border)
+        # print lst
 
         # get first element only
         border_vertices = []
-        for i in range(0, len(l)):
+        for i in range(0, len(lst)):
             s = []
-            for j in range(0, len(l[i])):
-                s.append(l[i][j][0])
+            for j in range(0, len(lst[i])):
+                s.append(lst[i][j][0])
             border_vertices.append(s)
         # SLOW get group faces
         border_group_dup = []
@@ -446,6 +455,7 @@ class Mesh(object):
 
     def __selectLoopGroupAnchors(self, border):
         anchors = []
+        anchor_faces = []
         # print border
         for i in range(len(border)):
             faces = self.__selectConvertVF([border[i]])
@@ -850,8 +860,8 @@ class Mesh(object):
         for vert in self.faces[id]:
             self.vertices[vert].parent_faces += [id]
 
-    def addFaces(self, l):
-        for i in l:
+    def addFaces(self, lst):
+        for i in lst:
             self.addFace(i)
 
     def __updateFaceVert(self, id, find_id, repl_id):
@@ -2651,10 +2661,10 @@ class Mesh(object):
         return [kResult.updateVertex]
 
     def flowLoop(self, sel_edges, factor=1):
-        def list_1dimension(l):
+        def list_1dimension(lst):
             n = []
-            for i in range(len(l)):
-                n += l[i]
+            for i in range(len(lst)):
+                n += lst[i]
             return n
 
         borders = self.__selectEdgesGroups(sel_edges)

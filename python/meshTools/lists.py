@@ -13,14 +13,14 @@ class Enumeration(object):
             setattr(self, name, number)
 
 
-def toStrList(l):
-    return ", ".join(map(str, l))
+def toStrList(lst):
+    return ", ".join(map(str, lst))
 
 
-def get_row(l, row):
+def get_row(lst, row):
     nl = []
-    for i in range(len(l)):
-        nl += [l[i][row]]
+    for i in range(len(lst)):
+        nl += [lst[i][row]]
     return nl
 
 
@@ -51,14 +51,14 @@ def sortz(a, b):
         return 0
 
 
-def to_maya_sel(prefix, l):
-    l.sort()
-    nl = [[l[0]]]
-    for i in range(1, len(l)):
-        if nl[-1][-1] + 1 == l[i]:
-            nl[-1] += [l[i]]
+def to_maya_sel(prefix, lst):
+    lst.sort()
+    nl = [[lst[0]]]
+    for i in range(1, len(lst)):
+        if nl[-1][-1] + 1 == lst[i]:
+            nl[-1] += [lst[i]]
         else:
-            nl += [[l[i]]]
+            nl += [[lst[i]]]
     for i in range(len(nl)):
         if len(nl[i]) > 2:
             nl[i] = [nl[i][0], nl[i][-1]]
@@ -69,8 +69,8 @@ def to_maya_sel(prefix, l):
             st += [prefix + "[" + str(nl[i][0]) + "]"]
         else:
             st += [prefix + "[" + str(nl[i][0]) + ":" + str(nl[i][1]) + "]"]
-    # l=[0,1,4,5,6,7,8,18,12,11,15]
-    # print listToMayaSel("Pplane01.vtx",l)
+    # lst=[0,1,4,5,6,7,8,18,12,11,15]
+    # print listToMayaSel("Pplane01.vtx",lst)
     # select -r pPlane1.vtx[3:8] pPlane1.vtx[11:16] pPlane1.vtx[20:24] pPlane1.vtx[30:32] pPlane1.vtx[40:41] ;
     return st
 
@@ -96,9 +96,9 @@ def offset(c, offset=0):
     return e
 
 
-def remove_valuez(l, value):
+def remove_valuez(lst, value):
     find = 0
-    n = copy(l)
+    n = copy(lst)
     while find > -1:
         find = find(n, value)
         if find > -1:
@@ -108,24 +108,24 @@ def remove_valuez(l, value):
     return n
 
 
-def cycle(l, cycles):
+def cycle(lst, cycles):
     for i in range(0, cycles):
-        first_to_last = l[0]
-        l.pop(0)
-        l.append(first_to_last)
-    return l
+        first_to_last = lst[0]
+        lst.pop(0)
+        lst.append(first_to_last)
+    return lst
 
 
-def find(l, x):
+def find(lst, x):
     i = 0
-    while i < len(l):
-        if l[i] == x:
+    while i < len(lst):
+        if lst[i] == x:
             return i
         i += 1
     return -1
 
 
-def group_by_1st(l):
+def group_by_1st(lst):
     def sort_my(a, b):
         if a[0] > b[0]:
             return 1
@@ -134,7 +134,7 @@ def group_by_1st(l):
         else:
             return -1
 
-    l1 = copy(l)
+    l1 = copy(lst)
     l1.sort(sort_my)
     r = []
     e = l1[0][0]
@@ -160,44 +160,44 @@ def remove_duplicates(l1, l2):
 
 
 def leave_duplicates(l1, l2):
-    l = []
+    lst = []
     lt = copy(l1)
     for i in range(0, len(l2)):
         try:
             ind = lt.index(l2[i])
-            l.append(lt[ind])
+            lst.append(lt[ind])
             lt.pop(ind)
 
         except ValueError:
             pass
-    return l
+    return lst
 
 
-def group_duplicates(l):
+def group_duplicates(lst):
     l_new = []
-    for i in range(len(l)):
-        id = find(l_new, l[i])
+    for i in range(len(lst)):
+        id = find(l_new, lst[i])
         if id == -1:
-            l_new.append(l[i])
+            l_new.append(lst[i])
     return l_new
 
 
-def to_pairs(l):
+def to_pairs(lst):
     # [0,1,2,3]=>[[0,1][2,3]]
     nl = []
-    for i in range(1, len(l) // 2 + 1):
-        nl.append([l[i * 2 - 2], l[i * 2 - 1]])
+    for i in range(1, len(lst) // 2 + 1):
+        nl.append([lst[i * 2 - 2], lst[i * 2 - 1]])
     return nl
 
 
-def to_edges(l):
+def to_edges(lst):
     # [0,1,2,3]=>[[0,1][1,2][2,3][3,0]]
     edges = []
-    for i in range(len(l)):
-        if i == len(l) - 1:
-            edges += [[l[i], l[0]]]
+    for i in range(len(lst)):
+        if i == len(lst) - 1:
+            edges += [[lst[i], lst[0]]]
         else:
-            edges += [[l[i], l[i + 1]]]
+            edges += [[lst[i], lst[i + 1]]]
     return edges
 
 

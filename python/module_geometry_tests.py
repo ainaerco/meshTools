@@ -1,10 +1,11 @@
-from meshTools._geometry import *
 from random import random
+
+from meshTools.geometry import BBox, Transform, Vector, epsilonTest, solveCubic
 
 v1 = Vector(1, 0, 0)
 v2 = Vector(0.00001, 0, 0)
 print(v2.zeroTest())
-print(zeroTest(0.01))
+print(epsilonTest(0.01))
 print(v1.x)
 z = []
 for i in range(10):

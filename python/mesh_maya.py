@@ -1,11 +1,16 @@
 import math
 
 import meshTools.lists as lists
-from meshTools.mesh import *
+from meshTools.geometry import BBox, Point, Transform, Vector, pointInPoly
+from meshTools.mesh import Mesh, kGeotype
 
 import maya.OpenMaya as OpenMaya
 import maya.cmds as cmds
 import random
+
+# Set by script when run (see bottom of file)
+selectionPath = None
+sel_object = None
 
 
 class MayaMesh(Mesh):
