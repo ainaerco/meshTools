@@ -82,6 +82,32 @@ The build produces Python extension modules (`.so` on Linux, `.pyd` on Windows) 
 - **macOS** — C++11 enabled for OS X 10.9+
 - **Windows** — produces `.pyd` modules; `PLATFORM_WINDOWS` preprocessor define is set
 
+## Testing
+
+Python tests for the C++ bindings live in `tests/`. They require the extension modules to be built first (see [Building](#building)).
+
+From the repository root:
+
+```bash
+uv run pytest tests/ -v
+```
+
+or, with pytest already installed:
+
+```bash
+pytest tests/ -v
+```
+
+The test suite uses `tests/conftest.py` to add the build output to `sys.path`, so extensions are found from `build/scripts`, `build/module/Debug`, `build/module/Release`, `build/bezierModule/Debug`, or `build/bezierModule/Release`. To use a custom build directory, set the environment variable `MESHTOOLS_BUILD_DIR`.
+
+| Test module | Coverage |
+|---|---|
+| `test_bindings_geometry.py` | Vector, BBox, Ray, Transform, Polygon, and math functions (`lerp`, `fit`, `pointInPoly`, `solveCubic`, etc.) via `meshTools.geometry` |
+| `test_bindings_mesh.py` | C++ `_mesh` module: Mesh, Vert |
+| `test_bindings_bezier.py` | C++ `_bezier` module: Bezier, Lagrange, Spline |
+
+If an extension is not built or not on the path, its tests are skipped automatically.
+
 ## Python API
 
 ### Geometry primitives (`meshTools.geometry`)
