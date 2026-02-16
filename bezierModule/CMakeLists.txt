@@ -1,24 +1,12 @@
-SET( CXX_FILES
-  module_bezier.cpp
-)
-
-SET( SOURCE_FILES ${CXX_FILES} )
 include_directories(
-	${PYTHON_INCLUDE_PATH}
-	${Boost_INCLUDE_DIR}
-	"../bezier"
+  "${CMAKE_SOURCE_DIR}"
+  "${CMAKE_SOURCE_DIR}/bezier"
 )
 
-ADD_LIBRARY( pybezier SHARED ${SOURCE_FILES} )
-set_target_properties(pybezier PROPERTIES SUFFIX ${PYPREFIX})
-target_link_libraries(
-  pybezier
-  bezier
-  ${PYTHON_LIBRARY}
-  ${Boost_PYTHON_LIBRARY}
-)
+nanobind_add_module(_bezier module_bezier.cpp)
+target_link_libraries(_bezier PRIVATE bezier)
 
-INSTALL(TARGETS pybezier
-         LIBRARY DESTINATION scripts
-         RUNTIME DESTINATION scripts
+install(TARGETS _bezier
+  LIBRARY DESTINATION scripts
+  RUNTIME DESTINATION scripts
 )

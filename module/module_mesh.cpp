@@ -1,41 +1,27 @@
+#include <cstddef>
+#include <cstdint>
 
+#include <nanobind/nanobind.h>
+#include <nanobind/stl/vector.h>
 
-#include <boost/python/object.hpp>
-#include <boost/python.hpp>
-#include <boost/python/overloads.hpp>
-
-#include <module/pyUtils.h>
 #include <mesh/Mesh.h>
 
-using namespace boost::python;
+namespace nb = nanobind;
 
-void exportMesh()
+using namespace meshTools::Mesh;
+
+void export_mesh_module(nb::module_& m)
 {
-    class_<meshTools::Mesh::Mesh>("Mesh", init<>() )
-        //.def("selectGroups",  &meshTools::Mesh::Mesh::selectGroups)
-        //.def("selectConvert", &meshTools::Mesh::Mesh::selectConvert)
-        .add_property("verts",&meshTools::Mesh::Mesh::verts)
-    ;
+    nb::class_<Vert>(m, "Vert")
+        .def(nb::init<>())
+        .def("computeNormal", &Vert::computeNormal);
 
+    nb::class_<Mesh>(m, "Mesh")
+        .def(nb::init<>())
+        .def_prop_ro("verts", [](const Mesh& mesh) { return mesh.verts; });
 }
 
-void exportVert()
+NB_MODULE(_mesh, m)
 {
-    class_<meshTools::Mesh::Vert>("Vert", init<>() )
-        .def("computeNormal",&meshTools::Mesh::Vert::computeNormal)
-    ;
-
+    export_mesh_module(m);
 }
-
-BOOST_PYTHON_MODULE(_mesh)
-{
-    exportVert();
-    exportMesh();
-    
-    to_python_converter<std::vector<meshTools::Mesh::Vert*>, meshTools::stdVectorToPythonList<meshTools::Mesh::Vert*> >();
-    meshTools::stdVectorFromPythonList<meshTools::Mesh::Vert*>();
-    
-
-}
-
-

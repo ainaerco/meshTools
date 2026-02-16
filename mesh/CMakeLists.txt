@@ -6,10 +6,7 @@ SET( H_FILES
 )
 
 SET( SOURCE_FILES ${CXX_FILES} ${H_FILES} )
-include_directories(
-	${Boost_INCLUDE_DIR}
-	"../"
-)
+include_directories("../")
 
 ADD_LIBRARY( mesh ${SOURCE_FILES} )
 INSTALL(TARGETS mesh

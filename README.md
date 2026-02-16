@@ -4,7 +4,7 @@ A 3D mesh geometry library providing both C++ core implementations and Python bi
 
 ## Overview
 
-meshTools is a collection of geometric algorithms and data structures for 3D mesh processing. It exposes a C++ core via Boost.Python extension modules, and includes a pure-Python mesh layer on top. Maya-specific utilities allow the library to be used directly inside Autodesk Maya scripts.
+meshTools is a collection of geometric algorithms and data structures for 3D mesh processing. It exposes a C++ core via [nanobind](https://github.com/wjakob/nanobind) extension modules (Python 3.12+), and includes a pure-Python mesh layer on top. Maya-specific utilities allow the library to be used directly inside Autodesk Maya scripts.
 
 ## Features
 
@@ -25,9 +25,8 @@ meshTools/
 ├── geometry/               # C++ geometry math (Vector, BBox, List, math utils)
 ├── mesh/                   # C++ mesh topology (Vert, Edge, Face, Mesh)
 ├── bezier/                 # C++ curve classes (Bezier, Lagrange, Spline)
-├── bezierModule/           # Boost.Python bindings for bezier curves -> _bezier
-├── module/                 # Boost.Python bindings for geometry + mesh -> _geometry, _mesh
-├── meshMaya/               # C++ Maya mesh utility stub
+├── bezierModule/           # nanobind bindings for bezier curves -> _bezier
+├── module/                 # nanobind bindings for geometry + mesh -> _geometry, _mesh
 └── python/
     ├── CMakeLists.txt
     ├── meshTools/          # Python package
@@ -54,18 +53,22 @@ meshTools/
 
 | Dependency | Notes |
 |---|---|
-| CMake >= 2.8 | Build system |
-| Python 2.x | Extension modules target Python 2 |
-| Boost.Python | C++/Python bridge (static libs) |
+| CMake >= 3.18 | Build system (nanobind fetched via FetchContent) |
+| Python 3.12+ | Extension modules target Python 3.12 |
+| nanobind | C++/Python bridge (fetched automatically) |
 | Autodesk Maya | Required only for `mesh_maya*.py` and `obb.py` |
 
 ## Building
 
+Requires **CMake 3.18+** and **Python 3.12** (development headers). nanobind is fetched automatically via FetchContent.
+
 ```bash
 mkdir build && cd build
-cmake ..
-make
+cmake ..   # optionally: -DPython_ROOT_DIR=/path/to/python3.12
+cmake --build .
 ```
+
+On Windows, use a generator such as `-G "Visual Studio 17 2022" -A x64` if not using Ninja.
 
 The build produces Python extension modules (`.so` on Linux, `.pyd` on Windows) that are imported by the Python package:
 

@@ -1,4 +1,3 @@
-#include <boost/foreach.hpp>
 #include "geometry/Polygon.h"
 #include "geometry/math.h"
 

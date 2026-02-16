@@ -1,37 +1,14 @@
-SET( CXX_FILES
-  module_geometry.cpp
-)
+include_directories("${CMAKE_SOURCE_DIR}")
 
-include_directories(
-	${PYTHON_INCLUDE_PATH}
-	${Boost_INCLUDE_DIR}
-	"../"
-)
+# _geometry extension
+nanobind_add_module(_geometry module_geometry.cpp)
+target_link_libraries(_geometry PRIVATE geometry)
 
-ADD_LIBRARY( _geometry SHARED ${CXX_FILES} )
-set_target_properties(_geometry PROPERTIES SUFFIX ${PYPREFIX} PREFIX "")
-target_link_libraries(
-  _geometry
-  geometry
-  ${PYTHON_LIBRARY}
-  ${Boost_PYTHON_LIBRARY}
-)
+# _mesh extension
+nanobind_add_module(_mesh module_mesh.cpp)
+target_link_libraries(_mesh PRIVATE geometry mesh)
 
-SET( CXX_FILES
-  module_mesh.cpp
-)
-
-ADD_LIBRARY( _mesh SHARED ${CXX_FILES} )
-set_target_properties(_mesh	PROPERTIES SUFFIX ${PYPREFIX} PREFIX "")
-target_link_libraries(
-  _mesh
-  geometry
-  mesh
-  ${PYTHON_LIBRARY}
-  ${Boost_PYTHON_LIBRARY}
-)
-
-INSTALL(TARGETS _mesh _geometry
-         LIBRARY DESTINATION scripts
-         RUNTIME DESTINATION scripts
+install(TARGETS _geometry _mesh
+  LIBRARY DESTINATION scripts
+  RUNTIME DESTINATION scripts
 )
