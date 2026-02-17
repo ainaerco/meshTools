@@ -2,6 +2,11 @@
 
 Guidance for coding agents working in this repository.
 
+## Tooling policy
+
+- Do not use `pip` directly in this repository.
+- Always use `uv` commands (`uv pip ...`, `uv run ...`) for installs and Python tooling.
+
 ## Purpose
 
 Use this file as the default workflow reference after making changes:
@@ -23,10 +28,8 @@ All commands below come from the repository `README.md` and existing scripts.
 Preferred (installable) workflows:
 
 ```bash
-pip install .
-# or editable install:
-pip install -e .
-# or with uv:
+uv pip install .
+# editable install:
 uv pip install -e .
 ```
 
@@ -49,8 +52,6 @@ Python tests (from repo root):
 
 ```bash
 uv run pytest tests/ -v
-# or:
-pytest tests/ -v
 ```
 
 C++ unit tests (GoogleTest via CTest, after building):
@@ -85,9 +86,17 @@ C++ formatting is defined for files under `src/` and `bindings/`:
 .\scripts\format.ps1
 ```
 
+Python formatting and lint checks:
+
+```bash
+uv run ruff format .
+uv run ruff check .
+```
+
 ## Agent checklist after code changes
 
 1. If you changed C++ in `src/` or `bindings/`, run the formatting script.
 2. Ensure the project builds (installable or standalone CMake path).
-3. Run relevant tests (at minimum `pytest tests/ -v`; include `ctest` for C++ changes).
-4. Review diffs and confirm generated formatting changes are included in your commit.
+3. Run relevant tests (at minimum `uv run pytest tests/ -v`; include `ctest` for C++ changes).
+4. Run Python formatting/lint checks (`uv run ruff format .` and `uv run ruff check .`).
+5. Review diffs and confirm generated formatting changes are included in your commit.
