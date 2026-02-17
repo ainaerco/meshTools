@@ -1,3 +1,8 @@
+/**
+ * @file bbox.cpp
+ * @brief Implementation of bounding box calculations
+ */
+
 #include <cstring>
 #include <geometry/bbox.h>
 #include <geometry/math.h>

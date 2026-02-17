@@ -1,3 +1,7 @@
+/**
+ * @file vector.cpp
+ * @brief Implementation of 3D vector geometric operations
+ */
 
 #include <cmath>
 #include <geometry/math.h>

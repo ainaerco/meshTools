@@ -1,3 +1,8 @@
+/**
+ * @file mesh.cpp
+ * @brief Implementation of mesh data structure operations
+ */
+
 #include "mesh.h"
 
 namespace meshTools {

@@ -1,3 +1,8 @@
+/**
+ * @file math.cpp
+ * @brief Implementation of mathematical utility functions
+ */
+
 #include <cmath>
 #include <geometry/math.h>
 #include <iostream>
