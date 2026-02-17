@@ -4,8 +4,9 @@
  */
 
 #pragma once
-#include <iostream>
+
 #include <vector>
+
 #define EPSILON 0.00001 ///< Small epsilon value for floating-point comparisons
 
 /**

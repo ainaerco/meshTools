@@ -7,6 +7,8 @@
 #include <geometry/transform.h>
 #include <geometry/vector.h>
 
+#include <sstream>
+
 namespace meshTools {
 namespace Geometry {
 

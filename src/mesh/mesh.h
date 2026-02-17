@@ -3,8 +3,7 @@
  * @brief Mesh data structure with vertices, edges, and faces
  */
 
-#ifndef _MESHTOOLS_MESH_H
-#define _MESHTOOLS_MESH_H
+#pragma once
 
 #include <geometry/bbox.h>
 #include <geometry/vector.h>
@@ -181,5 +180,3 @@ class Mesh {
 
 } // namespace Mesh
 } // namespace meshTools
-
-#endif

@@ -8,9 +8,8 @@ and parent/child links.
 from __future__ import annotations
 
 import logging
-from random import random
 
-from .geometry import Point, fit
+from .geometry import Point
 
 logger = logging.getLogger(__name__)
 

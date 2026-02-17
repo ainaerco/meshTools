@@ -148,10 +148,24 @@ std::vector<float> Lagrange::interpolate(const size_t &desired_num) {
 
 float *Spline1::interpolate(float *mPoints, const size_t &mNumPoints,
                             size_t &numPoints) {
-    float delta_t = 1 / float(numPoints);
-    float *res = new float[numPoints * numPoints / 2];
+    // numPoints is an in/out parameter:
+    // - input: desired number of samples per segment
+    // - output: number of floats written to the returned array (x,y pairs)
+    if (numPoints == 0) {
+        return nullptr;
+    }
+
+    const size_t desired_num = numPoints;
+    const float delta_t = 1.0f / float(desired_num);
+
+    // The loop below writes 2 floats (x,y) for each (i,t). The outer loop runs
+    // (mNumPoints/2 + 1) times, the inner loop runs ~desired_num times.
+    // Allocate enough space to avoid buffer overruns (previous code under-
+    // allocated and caused heap corruption).
+    const size_t num_spans = (mNumPoints / 2) + 1;
+    float *res = new float[num_spans * desired_num * 2];
     float *points = new float[mNumPoints + 8];
-    numPoints = 0;
+    size_t out = 0;
     /* Load local arrays with data and make the two endpoints multiple so that
      * they are interpolated. */
 
@@ -181,12 +195,11 @@ float *Spline1::interpolate(float *mPoints, const size_t &mNumPoints,
                       *(points + (i + 2) * 2 + 1) * bt2 +
                       *(points + (i + 3) * 2 + 1) * bt1;
 
-            *(res + numPoints) = x;
-            numPoints++;
-            *(res + numPoints) = y;
-            numPoints++;
+            res[out++] = x;
+            res[out++] = y;
         }
     }
+    numPoints = out;
     delete[] points;
     return res;
 }

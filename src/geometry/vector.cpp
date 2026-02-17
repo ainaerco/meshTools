@@ -7,6 +7,9 @@
 #include <geometry/transform.h>
 #include <geometry/vector.h>
 
+#include <ostream>
+#include <sstream>
+
 namespace meshTools {
 namespace Geometry {
 
@@ -63,6 +66,11 @@ std::string Vector::toString() const {
     std::stringstream ss;
     ss << "[" << x << "," << y << "," << z << "]";
     return ss.str();
+}
+
+std::ostream &operator<<(std::ostream &os, const Vector &v) {
+    os << "[" << v.x << "," << v.y << "," << v.z << "]";
+    return os;
 }
 
 bool Vector::isNull() const { return (x + y + z) == 0; }

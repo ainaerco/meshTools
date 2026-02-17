@@ -3,8 +3,7 @@
  * @brief Template list class with additional operations
  */
 
-#ifndef _MESHTOOLS_LIST_H
-#define _MESHTOOLS_LIST_H
+#pragma once
 
 #include <algorithm>
 #include <vector>
@@ -44,5 +43,3 @@ template <class T> unsigned int List<T>::find(const T &item) const {
 
 } // namespace Geometry
 } // namespace meshTools
-
-#endif

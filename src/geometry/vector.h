@@ -3,10 +3,11 @@
  * @brief 3D vector class with geometric operations
  */
 
-#ifndef _MESHTOOLS_VECTOR_H
-#define _MESHTOOLS_VECTOR_H
+#pragma once
 
-#include <iostream>
+// Forward declarations for stream operators (avoid pulling <iostream>/<ostream>
+// into this header).
+#include <iosfwd>
 #include <string>
 #include <vector>
 
@@ -317,10 +318,7 @@ class Vector {
      * @param v Vector to output
      * @return Reference to the output stream
      */
-    friend std::ostream &operator<<(std::ostream &os, const Vector &v) {
-        os << "[" << v.x << "," << v.y << "," << v.z << "]";
-        return os;
-    }
+    friend std::ostream &operator<<(std::ostream &os, const Vector &v);
 };
 
 /**
@@ -341,5 +339,3 @@ std::vector<Vector> sortedVectorArray(const std::vector<Vector> &v, int axis);
 
 } // namespace Geometry
 } // namespace meshTools
-
-#endif

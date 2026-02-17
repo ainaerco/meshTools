@@ -131,6 +131,39 @@ The test suite uses `tests/conftest.py` to add the build output to `sys.path`, s
 
 If an extension is not built or not on the path, its tests are skipped automatically.
 
+### C++ unit tests (GoogleTest)
+
+C++ unit tests live in `tests/cpp/` and are run with `ctest` after a successful CMake build.
+
+**Visual Studio generator (multi-config):**
+
+```bash
+cmake -S . -B build -G "Visual Studio 17 2022" -A x64
+cmake --build build --config Release
+ctest --test-dir build -C Release
+```
+
+**Single-config generators (Ninja / Makefiles):**
+
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+ctest --test-dir build
+```
+
+**Useful options:**
+
+```bash
+# show failing test output
+ctest --test-dir build -C Release --output-on-failure
+
+# run a subset by regex
+ctest --test-dir build -C Release -R VectorTest
+```
+
+You can also run the test executables directly (paths depend on generator/config), e.g.
+`build/tests/cpp/Release/geometry_tests.exe` and `build/tests/cpp/Release/bezier_tests.exe` on Windows.
+
 ## Code formatting (C++)
 
 C++ under `src/` and `bindings/` is formatted with [clang-format](https://clang.llvm.org/docs/ClangFormat.html) using customized LLVM style (see `.clang-format`).

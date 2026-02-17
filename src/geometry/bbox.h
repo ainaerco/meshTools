@@ -3,8 +3,7 @@
  * @brief Bounding box class for spatial calculations
  */
 
-#ifndef _MESHTOOLS_BBOX_H
-#define _MESHTOOLS_BBOX_H
+#pragma once
 
 #include <geometry/vector.h>
 
@@ -83,5 +82,3 @@ class Bbox {
 
 } // namespace Geometry
 } // namespace meshTools
-
-#endif

@@ -2,9 +2,8 @@
  * @file polygon.h
  * @brief Polygon class for polygon operations
  */
+#pragma once
 
-#ifndef _MESHTOOLS_POLYGON_H
-#define _MESHTOOLS_POLYGON_H
 #include <geometry/vector.h>
 #include <vector>
 
@@ -45,5 +44,3 @@ class Polygon {
 
 } // namespace Geometry
 } // namespace meshTools
-
-#endif

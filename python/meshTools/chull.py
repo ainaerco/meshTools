@@ -7,7 +7,7 @@ faces and vertices for mesh use.
 
 import logging
 
-from .geometry import Point, Vector
+from .geometry import Point
 
 logger = logging.getLogger(__name__)
 debug = False

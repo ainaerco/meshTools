@@ -3,7 +3,8 @@
  * @brief Implementation of mesh data structure operations
  */
 
-#include "mesh.h"
+#include <geometry/vector.h>
+#include <mesh/mesh.h>
 
 namespace meshTools {
 namespace Mesh {

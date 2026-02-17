@@ -3,10 +3,7 @@
  * @brief Ray class for ray-geometry intersection tests
  */
 
-#ifndef _MESHTOOLS_RAY_H
-#define _MESHTOOLS_RAY_H
-
-#include <vector>
+#pragma once
 
 #include <geometry/vector.h>
 
@@ -82,5 +79,3 @@ class Ray {
 
 } // namespace Geometry
 } // namespace meshTools
-
-#endif

@@ -3,10 +3,11 @@
  * @brief 4x4 transformation matrix class
  */
 
-#ifndef _MESHTOOLS_TR_H
-#define _MESHTOOLS_TR_H
+#pragma once
+
 #include <cstring>
 #include <string>
+
 namespace meshTools {
 namespace Geometry {
 class Vector;
@@ -244,5 +245,3 @@ class Transform {
 
 } // namespace Geometry
 } // namespace meshTools
-
-#endif

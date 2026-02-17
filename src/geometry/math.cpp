@@ -3,8 +3,11 @@
  * @brief Implementation of mathematical utility functions
  */
 
-#include <cmath>
 #include <geometry/math.h>
+#include <geometry/vector.h>
+
+#include <cmath>
+#include <vector>
 
 namespace meshTools {
 
