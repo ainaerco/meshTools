@@ -1,3 +1,8 @@
+/**
+ * @file polygon.cpp
+ * @brief Implementation of polygon triangulation and operations
+ */
+
 #include "geometry/polygon.h"
 
 namespace meshTools {

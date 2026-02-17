@@ -1,3 +1,7 @@
+/**
+ * @file ray.cpp
+ * @brief Implementation of ray-geometry intersection operations
+ */
 
 #include <geometry/math.h>
 #include <geometry/ray.h>

@@ -1,3 +1,8 @@
+/**
+ * @file transform.cpp
+ * @brief Implementation of 4x4 transformation matrix operations
+ */
+
 #include <cmath>
 #include <iostream>
 #include <sstream>

@@ -1,3 +1,8 @@
+/**
+ * @file curves.cpp
+ * @brief Implementation of curve interpolation algorithms
+ */
+
 #include "curves.h"
 
 namespace curves {
