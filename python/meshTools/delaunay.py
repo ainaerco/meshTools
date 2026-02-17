@@ -10,9 +10,27 @@ from __future__ import annotations
 import logging
 from random import random
 
-from .geometry import Point, Transform, fit
+from .geometry import Point, fit
 
 logger = logging.getLogger(__name__)
+
+
+def _det4(m: list) -> float:
+    """Determinant of a 4x4 matrix (list of 4 rows). Used when Transform.m is read-only."""
+    # Laplace expansion along first column
+    def det3(a):
+        return (
+            a[0][0] * (a[1][1] * a[2][2] - a[1][2] * a[2][1])
+            - a[0][1] * (a[1][0] * a[2][2] - a[1][2] * a[2][0])
+            + a[0][2] * (a[1][0] * a[2][1] - a[1][1] * a[2][0])
+        )
+
+    return (
+        m[0][0] * det3([m[1][1:], m[2][1:], m[3][1:]])
+        - m[1][0] * det3([m[0][1:], m[2][1:], m[3][1:]])
+        + m[2][0] * det3([m[0][1:], m[1][1:], m[3][1:]])
+        - m[3][0] * det3([m[0][1:], m[1][1:], m[2][1:]])
+    )
 
 
 class Tetra(object):
@@ -27,14 +45,13 @@ class Tetra(object):
         self.center = (v0 + v1 + v2 + v3) / 4
 
         self.num = 0
-        t = Transform()
-        t.m = [
+        m = [
             v0.toList() + [1],
             v1.toList() + [1],
             v2.toList() + [1],
             v3.toList() + [1],
         ]
-        self.determinant = t.determinant()
+        self.determinant = _det4(m)
         self.calculateCircumsphere()
 
     def calculateCircumsphere(self) -> None:
@@ -45,29 +62,25 @@ class Tetra(object):
         v1_len = v1.lengthSquared()
         v2_len = v2.lengthSquared()
         v3_len = v3.lengthSquared()
-        t = Transform()
         a = 2 * self.determinant
-        t.m = [
+        d0 = _det4([
             [v0_len, v0.y, v0.z, 1],
             [v1_len, v1.y, v1.z, 1],
             [v2_len, v2.y, v2.z, 1],
             [v3_len, v3.y, v3.z, 1],
-        ]
-        d0 = t.determinant()
-        t.m = [
+        ])
+        d1 = -_det4([
             [v0_len, v0.x, v0.z, 1],
             [v1_len, v1.x, v1.z, 1],
             [v2_len, v2.x, v2.z, 1],
             [v3_len, v3.x, v3.z, 1],
-        ]
-        d1 = -t.determinant()
-        t.m = [
+        ])
+        d2 = _det4([
             [v0_len, v0.x, v0.y, 1],
             [v1_len, v1.x, v1.y, 1],
             [v2_len, v2.x, v2.y, 1],
             [v3_len, v3.x, v3.y, 1],
-        ]
-        d2 = t.determinant()
+        ])
         self.circumcenter = Point(d0 / a, d1 / a, d2 / a)
         self.circumradius = (self.circumcenter - v0).length()
 
@@ -124,40 +137,35 @@ class Delaunay(object):
             v: Point to test.
             tetra: Tetrahedron to test against.
         """
-        t = Transform()
         v0 = tetra[0]
         v1 = tetra[1]
         v2 = tetra[2]
         v3 = tetra[3]
         d = tetra.determinant
-        t.m = [
+        d0 = _det4([
             v.toList() + [1],
             v1.toList() + [1],
             v2.toList() + [1],
             v3.toList() + [1],
-        ]
-        d0 = t.determinant()
-        t.m = [
+        ])
+        d1 = _det4([
             v0.toList() + [1],
             v.toList() + [1],
             v2.toList() + [1],
             v3.toList() + [1],
-        ]
-        d1 = t.determinant()
-        t.m = [
+        ])
+        d2 = _det4([
             v0.toList() + [1],
             v1.toList() + [1],
             v.toList() + [1],
             v3.toList() + [1],
-        ]
-        d2 = t.determinant()
-        t.m = [
+        ])
+        d3 = _det4([
             v0.toList() + [1],
             v1.toList() + [1],
             v2.toList() + [1],
             v.toList() + [1],
-        ]
-        d3 = t.determinant()
+        ])
         if d == 0:
             logger.debug("degenerate tetrahedra")
         elif (d > 0 and d0 > 0 and d1 > 0 and d2 > 0 and d3 > 0) or (
@@ -221,22 +229,3 @@ class Delaunay(object):
         )  # \
         # +"\ntetra_childs: "+str(len(self.tetra_child))+"\ntetra_childs: "+tc\
         # +"\ntetra_parent: "+str(len(self.tetra_parent))+"\ntetra_parent: "+tp\
-
-
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
-    verts = []
-    min, max = -10, 10
-    for i in range(20):
-        r = random()
-        verts += [
-            Point(
-                fit(random(), 0, 1, min, max),
-                fit(random(), 0, 1, min, max),
-                fit(random(), 0, 1, min, max),
-            )
-        ]
-    d = Delaunay(verts, max)
-    logger.info("%s", d)
-    # w = d.computeCircumsphere(1)
-    # print(w[0],w[1])

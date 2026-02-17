@@ -2822,22 +2822,3 @@ class Mesh(object):
         self.addFaces(new_faces)
         self.__deleteFaces(delete_faces)
         return [kResult.updateMesh]
-
-
-if __name__ == "__main__":
-    we = OBBox()
-    p = [
-        Vector(0, 1, 0),
-        Vector(0, 1, 1),
-        Vector(0.5, 1, 1),
-        Vector(0.5, 1, 0),
-        Vector(0, 0, 0),
-        Vector(0, 0, 1),
-        Vector(0.5, 0, 1),
-        Vector(0.5, 0, 0),
-    ]
-    we.fromPointSet(p)
-    logger.debug("vectors %s", we.vectors)
-    we = BBox()
-    we.obbFromPointSet(p)
-    logger.debug("axis %s", we.axis)

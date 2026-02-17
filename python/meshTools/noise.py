@@ -501,11 +501,3 @@ class Noise(object):
             z += 10
             ot = self.noise_template(self.tabindex4, x, y, z, t)
             return [ox, oy, oz, ot]
-
-
-if __name__ == "__main__":
-    import logging
-
-    logging.basicConfig(level=logging.INFO)
-    n = Noise()
-    logging.info("%s", n.snoise(0.2, 0.2, 0.1, 0.8))
