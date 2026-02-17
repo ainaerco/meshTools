@@ -65,39 +65,6 @@ TEST_F(MathTest, FitInvertedRange) {
     EXPECT_FLOAT_EQ(result, 50.0f);
 }
 
-// Min/Max tests
-TEST_F(MathTest, MaxFirstLarger) {
-    EXPECT_FLOAT_EQ(math::max(5.0f, 3.0f), 5.0f);
-}
-
-TEST_F(MathTest, MaxSecondLarger) {
-    EXPECT_FLOAT_EQ(math::max(3.0f, 5.0f), 5.0f);
-}
-
-TEST_F(MathTest, MaxEqual) {
-    EXPECT_FLOAT_EQ(math::max(5.0f, 5.0f), 5.0f);
-}
-
-TEST_F(MathTest, MaxNegative) {
-    EXPECT_FLOAT_EQ(math::max(-5.0f, -3.0f), -3.0f);
-}
-
-TEST_F(MathTest, MinFirstSmaller) {
-    EXPECT_FLOAT_EQ(math::min(3.0f, 5.0f), 3.0f);
-}
-
-TEST_F(MathTest, MinSecondSmaller) {
-    EXPECT_FLOAT_EQ(math::min(5.0f, 3.0f), 3.0f);
-}
-
-TEST_F(MathTest, MinEqual) {
-    EXPECT_FLOAT_EQ(math::min(5.0f, 5.0f), 5.0f);
-}
-
-TEST_F(MathTest, MinNegative) {
-    EXPECT_FLOAT_EQ(math::min(-5.0f, -3.0f), -5.0f);
-}
-
 // Interpolate Bezier tests
 TEST_F(MathTest, InterpolateBezierStart) {
     float result = math::interpolateBezier(0.0f, 0.0f, 1.0f, 2.0f, 3.0f);

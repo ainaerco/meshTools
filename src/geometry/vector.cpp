@@ -3,11 +3,9 @@
  * @brief Implementation of 3D vector geometric operations
  */
 
-#include <cmath>
 #include <geometry/math.h>
 #include <geometry/transform.h>
 #include <geometry/vector.h>
-#include <sstream>
 
 namespace meshTools {
 namespace Geometry {
@@ -94,8 +92,10 @@ float Vector::angle(const Vector &other) const {
         return 0;
     }
     float costheta = dot(other) / (n1 * n2);
-    costheta = math::min(costheta, 1);
-    costheta = math::max(costheta, -1);
+    if (costheta > 1.0f)
+        costheta = 1.0f;
+    if (costheta < -1.0f)
+        costheta = -1.0f;
     return acos(costheta);
 }
 

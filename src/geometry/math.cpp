@@ -5,7 +5,6 @@
 
 #include <cmath>
 #include <geometry/math.h>
-#include <iostream>
 
 namespace meshTools {
 
@@ -55,10 +54,6 @@ float lerp(float t, float a, float b) { return (a + (b - a) * t); }
 float fit(float p, float oldmin, float oldmax, float newmin, float newmax) {
     return lerp((p - oldmin) / (oldmax - oldmin), newmin, newmax);
 }
-
-float max(float a, float b) { return (a < b) ? b : a; }
-
-float min(float a, float b) { return (a < b) ? a : b; }
 
 float interpolateBezier(float t, float p0, float p1, float p2, float p3) {
     const float u = 1 - t;

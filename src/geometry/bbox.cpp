@@ -3,7 +3,6 @@
  * @brief Implementation of bounding box calculations
  */
 
-#include <cstring>
 #include <geometry/bbox.h>
 #include <geometry/math.h>
 #include <geometry/transform.h>

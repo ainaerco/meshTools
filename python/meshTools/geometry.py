@@ -20,8 +20,6 @@ try:
         lerp,
         solveCubic,
         fit,
-        min,
-        max,
         getBarycentric,
         sortedVectorArray,
     )
@@ -39,8 +37,6 @@ except ImportError:
         lerp,
         solveCubic,
         fit,
-        min,
-        max,
         getBarycentric,
         sortedVectorArray,
     )
@@ -63,8 +59,6 @@ __all__ = [
     "interpolateBezier",
     "interpolateCatmullRom",
     "lerp",
-    "max",
-    "min",
     "pointInPoly",
     "solveCubic",
     "sortedVectorArray",

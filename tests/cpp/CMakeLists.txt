@@ -11,6 +11,11 @@ add_executable(geometry_tests
     test_math.cpp
 )
 
+# MSVC does not define M_PI unless _USE_MATH_DEFINES is set
+if(MSVC)
+  target_compile_definitions(geometry_tests PRIVATE _USE_MATH_DEFINES)
+endif()
+
 target_link_libraries(geometry_tests
     geometry
     GTest::gtest_main

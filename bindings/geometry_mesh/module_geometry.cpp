@@ -36,8 +36,6 @@ void export_geometry_module(nb::module_ &m) {
     m.def("lerp", &math::lerp);
     m.def("solveCubic", &math::solveCubic);
     m.def("fit", &math::fit);
-    m.def("min", &math::min);
-    m.def("max", &math::max);
     m.def("getBarycentric", &math::getBarycentric);
     m.def("sortedVectorArray", &sortedVectorArray);
 

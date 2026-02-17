@@ -1,6 +1,5 @@
 set(CXX_FILES
 	bbox.cpp
-	lists.cpp
 	math.cpp
 	ray.cpp
 	transform.cpp

@@ -17,8 +17,6 @@ from meshTools.geometry import (
     lerp,
     solveCubic,
     fit,
-    min as geom_min,
-    max as geom_max,
     getBarycentric,
     sortedVectorArray,
 )
@@ -123,10 +121,6 @@ class TestMathFunctions:
     def test_fit(self):
         # map [0,10] -> [0,1]
         assert abs(fit(5.0, 0.0, 10.0, 0.0, 1.0) - 0.5) < 1e-6
-
-    def test_min_max(self):
-        assert geom_min(1.0, 2.0) == 1.0
-        assert geom_max(1.0, 2.0) == 2.0
 
     def test_solve_cubic(self):
         # x^3 = 0 -> one root 0

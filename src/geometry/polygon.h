@@ -5,7 +5,8 @@
 
 #ifndef _MESHTOOLS_POLYGON_H
 #define _MESHTOOLS_POLYGON_H
-#include "geometry/vector.h"
+#include <geometry/vector.h>
+#include <vector>
 
 namespace meshTools {
 namespace Geometry {

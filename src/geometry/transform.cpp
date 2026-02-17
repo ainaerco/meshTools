@@ -3,10 +3,6 @@
  * @brief Implementation of 4x4 transformation matrix operations
  */
 
-#include <cmath>
-#include <iostream>
-#include <sstream>
-
 #include <geometry/math.h>
 #include <geometry/transform.h>
 #include <geometry/vector.h>

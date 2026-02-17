@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 
 def _det4(m: list) -> float:
     """Determinant of a 4x4 matrix (list of 4 rows). Used when Transform.m is read-only."""
+
     # Laplace expansion along first column
     def det3(a):
         return (
@@ -63,24 +64,30 @@ class Tetra(object):
         v2_len = v2.lengthSquared()
         v3_len = v3.lengthSquared()
         a = 2 * self.determinant
-        d0 = _det4([
-            [v0_len, v0.y, v0.z, 1],
-            [v1_len, v1.y, v1.z, 1],
-            [v2_len, v2.y, v2.z, 1],
-            [v3_len, v3.y, v3.z, 1],
-        ])
-        d1 = -_det4([
-            [v0_len, v0.x, v0.z, 1],
-            [v1_len, v1.x, v1.z, 1],
-            [v2_len, v2.x, v2.z, 1],
-            [v3_len, v3.x, v3.z, 1],
-        ])
-        d2 = _det4([
-            [v0_len, v0.x, v0.y, 1],
-            [v1_len, v1.x, v1.y, 1],
-            [v2_len, v2.x, v2.y, 1],
-            [v3_len, v3.x, v3.y, 1],
-        ])
+        d0 = _det4(
+            [
+                [v0_len, v0.y, v0.z, 1],
+                [v1_len, v1.y, v1.z, 1],
+                [v2_len, v2.y, v2.z, 1],
+                [v3_len, v3.y, v3.z, 1],
+            ]
+        )
+        d1 = -_det4(
+            [
+                [v0_len, v0.x, v0.z, 1],
+                [v1_len, v1.x, v1.z, 1],
+                [v2_len, v2.x, v2.z, 1],
+                [v3_len, v3.x, v3.z, 1],
+            ]
+        )
+        d2 = _det4(
+            [
+                [v0_len, v0.x, v0.y, 1],
+                [v1_len, v1.x, v1.y, 1],
+                [v2_len, v2.x, v2.y, 1],
+                [v3_len, v3.x, v3.y, 1],
+            ]
+        )
         self.circumcenter = Point(d0 / a, d1 / a, d2 / a)
         self.circumradius = (self.circumcenter - v0).length()
 
@@ -142,30 +149,38 @@ class Delaunay(object):
         v2 = tetra[2]
         v3 = tetra[3]
         d = tetra.determinant
-        d0 = _det4([
-            v.toList() + [1],
-            v1.toList() + [1],
-            v2.toList() + [1],
-            v3.toList() + [1],
-        ])
-        d1 = _det4([
-            v0.toList() + [1],
-            v.toList() + [1],
-            v2.toList() + [1],
-            v3.toList() + [1],
-        ])
-        d2 = _det4([
-            v0.toList() + [1],
-            v1.toList() + [1],
-            v.toList() + [1],
-            v3.toList() + [1],
-        ])
-        d3 = _det4([
-            v0.toList() + [1],
-            v1.toList() + [1],
-            v2.toList() + [1],
-            v.toList() + [1],
-        ])
+        d0 = _det4(
+            [
+                v.toList() + [1],
+                v1.toList() + [1],
+                v2.toList() + [1],
+                v3.toList() + [1],
+            ]
+        )
+        d1 = _det4(
+            [
+                v0.toList() + [1],
+                v.toList() + [1],
+                v2.toList() + [1],
+                v3.toList() + [1],
+            ]
+        )
+        d2 = _det4(
+            [
+                v0.toList() + [1],
+                v1.toList() + [1],
+                v.toList() + [1],
+                v3.toList() + [1],
+            ]
+        )
+        d3 = _det4(
+            [
+                v0.toList() + [1],
+                v1.toList() + [1],
+                v2.toList() + [1],
+                v.toList() + [1],
+            ]
+        )
         if d == 0:
             logger.debug("degenerate tetrahedra")
         elif (d > 0 and d0 > 0 and d1 > 0 and d2 > 0 and d3 > 0) or (

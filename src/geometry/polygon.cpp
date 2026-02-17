@@ -3,7 +3,8 @@
  * @brief Implementation of polygon triangulation and operations
  */
 
-#include "geometry/polygon.h"
+#include <geometry/polygon.h>
+#include <geometry/vector.h>
 
 namespace meshTools {
 namespace Geometry {

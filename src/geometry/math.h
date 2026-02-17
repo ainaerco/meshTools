@@ -37,22 +37,6 @@ bool epsilonTest(float value, float test = 0, float eps = 0.000001);
 float lerp(float t, float a, float b);
 
 /**
- * @brief Return the maximum of two values
- * @param a First value
- * @param b Second value
- * @return Maximum value
- */
-float max(float a, float b);
-
-/**
- * @brief Return the minimum of two values
- * @param a First value
- * @param b Second value
- * @return Minimum value
- */
-float min(float a, float b);
-
-/**
  * @brief Remap a value from one range to another
  * @param p Value to remap
  * @param oldmin Minimum of old range
