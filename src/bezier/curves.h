@@ -154,7 +154,7 @@ class Spline {
 class Spline1 {
   public:
     /** @brief Default constructor */
-    Spline1() {};
+    Spline1() {}
 
     /**
      * @brief Interpolate control points
