@@ -2,7 +2,8 @@
 
 Provides scalar and vector variants: snoise, vsnoise, fBm, turbulence, etc.
 All noise returns values in [-1, 1] unless noted. Uses gradient tables from
-noise_tabs for deterministic, repeatable results.
+noise_tabs for deterministic, repeatable results. Uses C++ _noise extension
+when available.
 """
 
 from math import floor
@@ -10,6 +11,16 @@ from math import floor
 from .noise_tabs import grads2, grads3, grads4, perm
 
 TABMASK = 0xFF
+
+try:
+    from . import _noise
+    _NoiseCpp = _noise.Noise
+except ImportError:
+    try:
+        import _noise
+        _NoiseCpp = _noise.Noise
+    except ImportError:
+        _NoiseCpp = None
 
 
 def floor2int(val: float) -> int:
@@ -74,8 +85,8 @@ def imod(a: float, b: float) -> float:
     return a
 
 
-class Noise(object):
-    """Procedural Simplex-style noise generator (2D, 3D, 4D)."""
+class NoisePy(object):
+    """Procedural Simplex-style noise generator (pure Python implementation)."""
 
     def __init__(self):
         self.xperiod = 1
@@ -501,3 +512,61 @@ class Noise(object):
             z += 10
             ot = self.noise_template(self.tabindex4, x, y, z, t)
             return [ox, oy, oz, ot]
+
+
+def _make_noise_class():
+    """Return Noise class: C++ wrapper if available, else pure Python."""
+    if _NoiseCpp is None:
+        return NoisePy
+
+    class Noise(object):
+        """Procedural Simplex-style noise generator (uses C++ when available)."""
+
+        def __init__(self):
+            self._impl = _NoiseCpp()
+            self.xperiod = 1
+            self.yperiod = 1
+            self.zperiod = 1
+            self.tperiod = 1
+            self.poffset = 0
+
+        def snoise(self, *args):
+            if len(args) == 1:
+                v = args[0]
+                return self._impl.snoise(v.x, v.y, v.z)
+            if len(args) == 2:
+                return self._impl.snoise(args[0], args[1])
+            if len(args) == 3:
+                return self._impl.snoise(args[0], args[1], args[2])
+            if len(args) == 4:
+                return self._impl.snoise(args[0], args[1], args[2], args[3])
+            raise TypeError("snoise takes 1, 2, 3, or 4 arguments")
+
+        def vsnoise(self, *args):
+            if len(args) == 1:
+                v = args[0]
+                return list(self._impl.vsnoise(v.x, v.y, v.z))
+            if len(args) == 2:
+                return list(self._impl.vsnoise(args[0], args[1]))
+            if len(args) == 3:
+                return list(self._impl.vsnoise(args[0], args[1], args[2]))
+            if len(args) == 4:
+                return list(self._impl.vsnoise(args[0], args[1], args[2], args[3]))
+            raise TypeError("vsnoise takes 1, 2, 3, or 4 arguments")
+
+        def fBm(self, x, y, z, octaves, lacunarity, gain):
+            return self._impl.fBm(x, y, z, octaves, lacunarity, gain)
+
+        def turbulence(self, x, y, z, octaves, lacunarity, gain):
+            return self._impl.turbulence(x, y, z, octaves, lacunarity, gain)
+
+        def vfBm(self, x, y, z, octaves, lacunarity, gain):
+            return list(self._impl.vfBm(x, y, z, octaves, lacunarity, gain))
+
+        def vturbulence(self, x, y, z, octaves, lacunarity, gain):
+            return list(self._impl.vturbulence(x, y, z, octaves, lacunarity, gain))
+
+    return Noise
+
+
+Noise = _make_noise_class()

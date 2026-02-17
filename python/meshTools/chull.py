@@ -2,7 +2,7 @@
 
 Implements the double-triangle method: start from a non-degenerate tetrahedron,
 then add points one by one, updating faces and edges. Exports hull as
-faces and vertices for mesh use.
+faces and vertices for mesh use. Uses C++ _chull extension when available.
 """
 
 import logging
@@ -11,6 +11,16 @@ from .geometry import Point
 
 logger = logging.getLogger(__name__)
 debug = False
+
+try:
+    from . import _chull
+    _CHull = _chull.Hull
+except ImportError:
+    try:
+        import _chull
+        _CHull = _chull.Hull
+    except ImportError:
+        _CHull = None
 
 
 class Vertex:
@@ -206,6 +216,9 @@ class Hull:
     """Convex hull of a 3D point set. Use exportHull() for [faces, vertices]."""
 
     def __init__(self, v):
+        if _CHull is not None:
+            self._impl = _CHull(v)
+            return
         self.vertices = []
         self.edges = []
         self.faces = []
@@ -213,6 +226,17 @@ class Hull:
         v = self.DoubleTriangle()
         self.ConstructHull(v)
         self.EdgeOrderOnFaces()
+
+    def exportHull(self) -> list:
+        """Return [faces, vertices] for mesh use.
+
+        Returns:
+            [faces, vertices] where faces are [[v0,v1,v2], ...] and
+            vertices are Points.
+        """
+        if _CHull is not None and hasattr(self, "_impl"):
+            return list(self._impl.exportHull())
+        return self._exportHullPython()
 
     def ReadVertices(self, v):
         """Create Vertex objects from point list v."""
@@ -520,13 +544,8 @@ class Hull:
 
         return evi, vi
 
-    def exportHull(self) -> list:
-        """Return [faces, vertices] for mesh use.
-
-        Returns:
-            [faces, vertices] where faces are [[v0,v1,v2], ...] and
-            vertices are Points.
-        """
+    def _exportHullPython(self) -> list:
+        """Pure-Python export (used when _chull extension not available)."""
         faces = []
         for i in range(len(self.vertices)):
             self.vertices[i].vnum = i

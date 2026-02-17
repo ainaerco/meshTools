@@ -97,6 +97,9 @@ The build produces Python extension modules (`.so` on Linux, `.pyd` on Windows) 
 
 - `_geometry` — geometry math (Vector, BBox, Ray, Transform, lerp, fit, solveCubic, …)
 - `_mesh` — Mesh/Vert topology classes
+- `_chull` — 3D convex hull (Hull)
+- `_delaunay` — 3D Delaunay tetrahedralization (Delaunay)
+- `_noise` — Simplex-style procedural noise (Noise)
 - `_bezier` — Bezier/Lagrange/Spline curve evaluation
 
 ### Platform notes
@@ -121,7 +124,7 @@ or, with pytest already installed:
 pytest tests/ -v
 ```
 
-The test suite uses `tests/conftest.py` to add the build output to `sys.path`, so extensions are found from `build/scripts`, `build/bindings/geometry_mesh`, or `build/bindings/bezier`. To use a custom build directory, set the environment variable `MESHTOOLS_BUILD_DIR`.
+The test suite uses `tests/conftest.py` to add the build output to `sys.path`, so extensions are found from `build/scripts` or the various `build/bindings/*` directories. To use a custom build directory, set the environment variable `MESHTOOLS_BUILD_DIR`.
 
 | Test module | Coverage |
 |---|---|
