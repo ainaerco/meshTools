@@ -8,8 +8,7 @@
 
 namespace nb = nanobind;
 
-void export_bezier_module(nb::module_& m)
-{
+void export_bezier_module(nb::module_ &m) {
     nb::class_<curves::Bezier>(m, "Bezier")
         .def(nb::init<>())
         .def(nb::init<std::vector<float>>())
@@ -26,7 +25,4 @@ void export_bezier_module(nb::module_& m)
         .def("interpolate", &curves::Spline::interpolate);
 }
 
-NB_MODULE(_bezier, m)
-{
-    export_bezier_module(m);
-}
+NB_MODULE(_bezier, m) { export_bezier_module(m); }

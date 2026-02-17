@@ -131,6 +131,17 @@ The test suite uses `tests/conftest.py` to add the build output to `sys.path`, s
 
 If an extension is not built or not on the path, its tests are skipped automatically.
 
+## Code formatting (C++)
+
+C++ under `src/` and `bindings/` is formatted with [clang-format](https://clang.llvm.org/docs/ClangFormat.html) using customized LLVM style (see `.clang-format`).
+
+- **Windows (PowerShell):** from the repo root run  
+  `.\scripts\format.ps1`
+- **Linux / macOS / Git Bash:**  
+  `./scripts/format.sh`
+
+Requires `clang-format` on your PATH.
+
 ## Python API
 
 ### Geometry primitives (`meshTools.geometry`)

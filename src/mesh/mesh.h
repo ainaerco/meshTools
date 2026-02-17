@@ -5,87 +5,75 @@
 #include <geometry/vector.h>
 #include <vector>
 
-namespace meshTools
-{
+namespace meshTools {
 
-namespace Mesh
-{
+namespace Mesh {
 
 using namespace Geometry;
-
 
 class Edge;
 class Face;
 
-class Vert
-{
-public:
-	Vert()	{	}
+class Vert {
+  public:
+    Vert() {}
 
-	unsigned int id;
-	Vector v;
-	std::vector<Edge*> edges;
-	std::vector<Face*> faces;
+    unsigned int id;
+    Vector v;
+    std::vector<Edge *> edges;
+    std::vector<Face *> faces;
 
-	float dot(const Vert& other);
-	Vector cross(const Vert& other);
-	std::vector<Vert*> neighbors();
-	Vector computeNormal();
+    float dot(const Vert &other);
+    Vector cross(const Vert &other);
+    std::vector<Vert *> neighbors();
+    Vector computeNormal();
 };
 
-class Edge
-{
-public:
-	Edge()	{	}
+class Edge {
+  public:
+    Edge() {}
 
-	unsigned int id;
-	Vert* verts[2];
-	std::vector<Face*> faces;  //Face * f = new Face();
+    unsigned int id;
+    Vert *verts[2];
+    std::vector<Face *> faces; // Face * f = new Face();
 
-	Vector computeNormal();
+    Vector computeNormal();
 
-	Vert* operator[](const size_t& index) 
-	{return verts[index];}
+    Vert *operator[](const size_t &index) { return verts[index]; }
 };
 
-class Face
-{
-public:
-	Face()	{	}
+class Face {
+  public:
+    Face() {}
 
-	unsigned int id;
-	std::vector<Vert*> verts;
-	std::vector<Edge*> edges;
-	Vector normal;
+    unsigned int id;
+    std::vector<Vert *> verts;
+    std::vector<Edge *> edges;
+    Vector normal;
 
-	std::vector<Vert*> toPairs();
-	bool isPointInside(Vector v);
-	Vector computeNormal();
-	Vector computeCenter();
+    std::vector<Vert *> toPairs();
+    bool isPointInside(Vector v);
+    Vector computeNormal();
+    Vector computeCenter();
 
-	Vert* operator[](const size_t& index) 
-	{return verts[index];}
+    Vert *operator[](const size_t &index) { return verts[index]; }
 };
 
-class Mesh
-{
-public:
-	Mesh()    
-	{
-		mode= "generic";
-	}
+class Mesh {
+  public:
+    Mesh() { mode = "generic"; }
 
-	std::string mode;
-	std::vector<Vert*> verts;
-	std::vector<Edge*> edges;
-	std::vector<Face*> faces;
-	Bbox bbox;
+    std::string mode;
+    std::vector<Vert *> verts;
+    std::vector<Edge *> edges;
+    std::vector<Face *> faces;
+    Bbox bbox;
 
-	//void selectGroups();
-	//void selectConvert();
+    // void selectGroups();
+    // void selectConvert();
 };
 
-}
-}
+} // namespace Mesh
+} // namespace meshTools
 
 #endif
