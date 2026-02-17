@@ -37,7 +37,8 @@ std::vector<float> Bezier::interpolate(const size_t &desired_num) {
     /* Make sure number of points is one more than a multiple of 3. */
     const size_t n = mNumPoints / 3 + (mNumPoints % 3) / 2;
 
-    const float delta_t = float(n / 3 + 1) / float(desired_num - 1);
+    const size_t num_segments = n / 3 + 1;
+    const float delta_t = float(num_segments) / float(desired_num - 1);
     /* Construct Bezier curves for each grouping of four points. */
     size_t count = 0;
     for (size_t i = 0; i < n + 1; i += 3) {
