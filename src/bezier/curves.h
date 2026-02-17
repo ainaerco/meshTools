@@ -148,8 +148,8 @@ class Spline {
  * @class Spline1
  * @brief Alternative spline interpolation implementation
  *
- * This class provides an alternative spline interpolation using raw float
- * arrays.
+ * This class provides an alternative spline interpolation using std::vector
+ * for safe memory management.
  */
 class Spline1 {
   public:
@@ -158,13 +158,12 @@ class Spline1 {
 
     /**
      * @brief Interpolate control points
-     * @param mPoints Array of control point values
-     * @param mNumPoints Number of control points
-     * @param numPoints Output parameter for number of interpolated points
-     * @return Array of interpolated values
+     * @param mPoints Vector of control point values
+     * @param desired_num Desired number of samples per segment
+     * @return Vector of interpolated values (x,y pairs)
      */
-    float *interpolate(float *mPoints, const size_t &mNumPoints,
-                       size_t &numPoints);
+    std::vector<float> interpolate(const std::vector<float> &mPoints,
+                                   const size_t &desired_num);
 };
 
 } // namespace curves

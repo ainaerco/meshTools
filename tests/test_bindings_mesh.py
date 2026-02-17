@@ -6,7 +6,7 @@ pytest.importorskip("meshTools")
 from meshTools import _mesh
 
 if _mesh is None:
-    pytest.skip("_mesh extension not built")
+    pytest.skip("_mesh extension not built", allow_module_level=True)
 
 
 class TestVert:

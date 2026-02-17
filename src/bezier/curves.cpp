@@ -146,39 +146,30 @@ std::vector<float> Lagrange::interpolate(const size_t &desired_num) {
     return res;
 }
 
-float *Spline1::interpolate(float *mPoints, const size_t &mNumPoints,
-                            size_t &numPoints) {
-    // numPoints is an in/out parameter:
-    // - input: desired number of samples per segment
-    // - output: number of floats written to the returned array (x,y pairs)
-    if (numPoints == 0) {
-        return nullptr;
+std::vector<float> Spline1::interpolate(const std::vector<float> &mPoints,
+                                        const size_t &desired_num) {
+    std::vector<float> res;
+
+    if (desired_num == 0 || mPoints.empty()) {
+        return res;
     }
 
-    const size_t desired_num = numPoints;
+    const size_t mNumPoints = mPoints.size();
     const float delta_t = 1.0f / float(desired_num);
 
-    // The loop below writes 2 floats (x,y) for each (i,t). The outer loop runs
-    // (mNumPoints/2 + 1) times, the inner loop runs ~desired_num times.
-    // Allocate enough space to avoid buffer overruns (previous code under-
-    // allocated and caused heap corruption).
-    const size_t num_spans = (mNumPoints / 2) + 1;
-    float *res = new float[num_spans * desired_num * 2];
-    float *points = new float[mNumPoints + 8];
-    size_t out = 0;
+    // Use std::vector for automatic memory management
+    std::vector<float> points(mNumPoints + 8);
+
     /* Load local arrays with data and make the two endpoints multiple so that
      * they are interpolated. */
-
-    *(points) = *(points + 2) = *(mPoints);
-    *(points + 1) = *(points + 3) = *(mPoints + 1);
+    points[0] = points[2] = mPoints[0];
+    points[1] = points[3] = mPoints[1];
     for (size_t i = 0; i < mNumPoints / 2; i++) {
-        *(points + (i + 2) * 2) = *(mPoints + i * 2);
-        *(points + (i + 2) * 2 + 1) = *(mPoints + i * 2 + 1);
+        points[(i + 2) * 2] = mPoints[i * 2];
+        points[(i + 2) * 2 + 1] = mPoints[i * 2 + 1];
     }
-    *(points + mNumPoints + 4) = *(points + mNumPoints + 6) =
-        *(mPoints + mNumPoints - 2);
-    *(points + mNumPoints + 5) = *(points + mNumPoints + 7) =
-        *(mPoints + mNumPoints - 1);
+    points[mNumPoints + 4] = points[mNumPoints + 6] = mPoints[mNumPoints - 2];
+    points[mNumPoints + 5] = points[mNumPoints + 7] = mPoints[mNumPoints - 1];
 
     /* Compute the values to plot. */
     for (size_t i = 0; i <= mNumPoints / 2; i++) {
@@ -187,20 +178,17 @@ float *Spline1::interpolate(float *mPoints, const size_t &mNumPoints,
             const float bt2 = b(t - 1.0f);
             const float bt3 = b(t);
             const float bt4 = b(t + 1.0f);
-            float x = *(points + i * 2) * bt4 + *(points + (i + 1) * 2) * bt3 +
-                      *(points + (i + 2) * 2) * bt2 +
-                      *(points + (i + 3) * 2) * bt1;
-            float y = *(points + i * 2 + 1) * bt4 +
-                      *(points + (i + 1) * 2 + 1) * bt3 +
-                      *(points + (i + 2) * 2 + 1) * bt2 +
-                      *(points + (i + 3) * 2 + 1) * bt1;
+            float x = points[i * 2] * bt4 + points[(i + 1) * 2] * bt3 +
+                      points[(i + 2) * 2] * bt2 + points[(i + 3) * 2] * bt1;
+            float y = points[i * 2 + 1] * bt4 + points[(i + 1) * 2 + 1] * bt3 +
+                      points[(i + 2) * 2 + 1] * bt2 +
+                      points[(i + 3) * 2 + 1] * bt1;
 
-            res[out++] = x;
-            res[out++] = y;
+            res.push_back(x);
+            res.push_back(y);
         }
     }
-    numPoints = out;
-    delete[] points;
+
     return res;
 }
 
