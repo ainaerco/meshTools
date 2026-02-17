@@ -180,19 +180,12 @@ TEST_F(CurvesTest, SplineInterpolateSmoothness) {
 TEST_F(CurvesTest, Spline1Interpolate) {
     Spline1 spline1;
     size_t numPoints = 20;
-    float* points = new float[longerPoints.size()];
-    for (size_t i = 0; i < longerPoints.size(); i++) {
-        points[i] = longerPoints[i];
-    }
     
-    float* result = spline1.interpolate(points, longerPoints.size(), numPoints);
+    std::vector<float> result = spline1.interpolate(longerPoints, numPoints);
     
-    // Result should be valid
-    EXPECT_NE(result, nullptr);
-    
-    // Clean up
-    delete[] points;
-    delete[] result;
+    // Result should have points
+    EXPECT_GT(result.size(), 0u);
+    EXPECT_EQ(result.size() % 2, 0u);  // Should be even (x,y pairs)
 }
 
 // Edge cases
