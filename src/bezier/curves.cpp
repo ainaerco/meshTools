@@ -32,14 +32,12 @@ float b(float t)
 }
 
 std::vector<float> Bezier::interpolate(const size_t &desired_num) {
-
     std::vector<float> res;
     mNumPoints = mPoints.size();
-    size_t n;
     /* Make sure number of points is one more than a multiple of 3. */
-    n = mNumPoints / 3 + (mNumPoints % 3) / 2;
+    const size_t n = mNumPoints / 3 + (mNumPoints % 3) / 2;
 
-    float delta_t = float(n / 3 + 1) / float(desired_num - 1);
+    const float delta_t = float(n / 3 + 1) / float(desired_num - 1);
     /* Construct Bezier curves for each grouping of four points. */
     size_t count = 0;
     for (size_t i = 0; i < n + 1; i += 3) {
@@ -89,14 +87,14 @@ std::vector<float> Bezier::interpolate(const size_t &desired_num) {
 std::vector<float> Lagrange::interpolate(const size_t &desired_num) {
     std::vector<float> res;
     mNumPoints = mPoints.size();
-    float delta_t = 0.1f;
+    const float delta_t = 0.1f;
     /* Handle first set of 4 points between t=-1 and t=0 separately. */
     for (float t = -1.0f; t < delta_t / 2.0f; t += delta_t) {
         float x, y;
-        float b1 = B(1, t);
-        float b2 = B(2, t);
-        float b3 = B(3, t);
-        float b4 = B(4, t);
+        const float b1 = B(1, t);
+        const float b2 = B(2, t);
+        const float b3 = B(3, t);
+        const float b4 = B(4, t);
         x = mPoints.at(0) * b1 + mPoints.at(2) * b2 + mPoints.at(4) * b3 +
             mPoints.at(6) * b4;
         y = mPoints.at(1) * b1 + mPoints.at(3) * b2 + mPoints.at(5) * b3 +
@@ -110,10 +108,10 @@ std::vector<float> Lagrange::interpolate(const size_t &desired_num) {
     for (size_t i = 1; i <= mNumPoints / 3; i++) {
         for (float t = delta_t; t < 1.0f + delta_t / 2.0f; t += delta_t) {
             float x, y;
-            float b1 = B(1, t);
-            float b2 = B(2, t);
-            float b3 = B(3, t);
-            float b4 = B(4, t);
+            const float b1 = B(1, t);
+            const float b2 = B(2, t);
+            const float b3 = B(3, t);
+            const float b4 = B(4, t);
             x = mPoints.at((i - 1) * 2) * b1 + mPoints.at(i * 2) * b2 +
                 mPoints.at((i + 1) * 2) * b3 + mPoints.at((i + 2) * 2) * b4;
             y = mPoints.at((i - 1) * 2 + 1) * b1 + mPoints.at(i * 2 + 1) * b2 +
@@ -128,10 +126,10 @@ std::vector<float> Lagrange::interpolate(const size_t &desired_num) {
 
     for (float t = 1.0f + delta_t; t < 2.0f + delta_t / 2.0f; t += delta_t) {
         float x, y;
-        float b1 = B(1, t);
-        float b2 = B(2, t);
-        float b3 = B(3, t);
-        float b4 = B(4, t);
+        const float b1 = B(1, t);
+        const float b2 = B(2, t);
+        const float b3 = B(3, t);
+        const float b4 = B(4, t);
         x = mPoints.at(mNumPoints - 8) * b1 + mPoints.at(mNumPoints - 6) * b2 +
             mPoints.at(mNumPoints - 4) * b3 + mPoints.at(mNumPoints - 2) * b4;
         y = mPoints.at(mNumPoints - 7) * b1 + mPoints.at(mNumPoints - 5) * b2 +
@@ -165,10 +163,10 @@ float *Spline1::interpolate(float *mPoints, const size_t &mNumPoints,
     /* Compute the values to plot. */
     for (size_t i = 0; i <= mNumPoints / 2; i++) {
         for (float t = delta_t; t < 1.0f + delta_t / 2.0f; t += delta_t) {
-            float bt1 = b(t - 2.0f);
-            float bt2 = b(t - 1.0f);
-            float bt3 = b(t);
-            float bt4 = b(t + 1.0f);
+            const float bt1 = b(t - 2.0f);
+            const float bt2 = b(t - 1.0f);
+            const float bt3 = b(t);
+            const float bt4 = b(t + 1.0f);
             float x = *(points + i * 2) * bt4 + *(points + (i + 1) * 2) * bt3 +
                       *(points + (i + 2) * 2) * bt2 +
                       *(points + (i + 3) * 2) * bt1;
@@ -190,7 +188,7 @@ float *Spline1::interpolate(float *mPoints, const size_t &mNumPoints,
 std::vector<float> Spline::interpolate(const size_t &desired_num) {
     std::vector<float> res;
     mNumPoints = mPoints.size();
-    float delta_t = 1 / float(desired_num);
+    const float delta_t = 1 / float(desired_num);
     std::vector<float> points;
     points.resize(mNumPoints + 8);
 
@@ -212,10 +210,10 @@ std::vector<float> Spline::interpolate(const size_t &desired_num) {
     /* Compute the values to plot. */
     for (size_t i = 0; i <= mNumPoints / 2; i++) {
         for (float t = delta_t; t < 1.0f + delta_t / 2.0f; t += delta_t) {
-            float bt1 = b(t - 2.0f);
-            float bt2 = b(t - 1.0f);
-            float bt3 = b(t);
-            float bt4 = b(t + 1.0f);
+            const float bt1 = b(t - 2.0f);
+            const float bt2 = b(t - 1.0f);
+            const float bt3 = b(t);
+            const float bt4 = b(t + 1.0f);
             float x = points[i * 2] * bt4 + points[(i + 1) * 2] * bt3 +
                       points[(i + 2) * 2] * bt2 + points[(i + 3) * 2] * bt1;
             float y = points[i * 2 + 1] * bt4 + points[(i + 1) * 2 + 1] * bt3 +

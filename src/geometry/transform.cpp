@@ -51,7 +51,7 @@ Transform::Transform(const Vector &v1, const Vector &v4) {
     m[3][3] = 1;
 }
 
-std::string Transform::toString() {
+std::string Transform::toString() const {
     std::stringstream ss;
     ss << "[" << m[0][0] << "," << m[0][1] << "," << m[0][2] << "," << m[0][3]
        << "]" << "\n";
@@ -65,11 +65,11 @@ std::string Transform::toString() {
 }
 
 Transform Transform::lookAt(const Vector &pos, const Vector &look,
-                            const Vector &up) {
+                            const Vector &up) const {
     Transform t;
-    Vector dir = look - pos;
-    Vector left = dir.cross(up).normalize();
-    Vector newup = dir.cross(left).normalize();
+    const Vector dir = look - pos;
+    const Vector left = dir.cross(up).normalize();
+    const Vector newup = dir.cross(left).normalize();
     t.m[0][0] = left.x;
     t.m[0][1] = newup.x;
     t.m[0][2] = dir.x;
@@ -84,12 +84,12 @@ Transform Transform::lookAt(const Vector &pos, const Vector &look,
     t.m[2][3] = pos.z;
     t.m[3][0] = 0;
     t.m[3][1] = 0;
-    m[3][2] = 0;
-    m[3][3] = 1;
+    t.m[3][2] = 0;
+    t.m[3][3] = 1;
     return t;
 }
 
-float subdet(float m[4][4], int i, int j) {
+float subdet(const float m[4][4], int i, int j) {
     float r[9];
     int cur = 0;
     for (int k = 0; k < 4; ++k) {
@@ -106,7 +106,7 @@ float subdet(float m[4][4], int i, int j) {
            r[6] * r[4] * r[2] - r[7] * r[5] * r[0] - r[8] * r[3] * r[1];
 }
 
-Transform Transform::identity() {
+Transform Transform::identity() const {
     Transform t;
     t.m[0][0] = t.m[1][1] = t.m[2][2] = t.m[3][3] = 1.0f;
     t.m[0][1] = t.m[0][2] = t.m[0][3] = t.m[1][0] = t.m[1][2] = t.m[1][3] =
@@ -115,7 +115,7 @@ Transform Transform::identity() {
     return t;
 }
 
-Transform Transform::invert() {
+Transform Transform::invert() const {
     Transform t;
     float det = determinant();
 
@@ -126,15 +126,16 @@ Transform Transform::invert() {
         det = 1 / det;
         for (int i = 0; i < 4; i++)
             for (int j = 0; j < 4; j++) {
-                float sign = 1.0f - ((i + j) % 2) * 2.0f;
-                float d = subdet(m, i, j);
+                const float sign = 1.0f - ((i + j) % 2) * 2.0f;
+                const float d = subdet(m, i, j);
                 t.m[i][j] = d * det * sign;
             }
     }
     return t;
 }
 
-Transform Transform::translate(const float &x, const float &y, const float &z) {
+Transform Transform::translate(const float &x, const float &y,
+                               const float &z) const {
     Transform t;
     t.m[0][0] = 1;
     t.m[0][1] = 0;
@@ -155,11 +156,12 @@ Transform Transform::translate(const float &x, const float &y, const float &z) {
     return t;
 }
 
-Transform Transform::translate(const Vector &v) {
+Transform Transform::translate(const Vector &v) const {
     return translate(v.x, v.y, v.z);
 }
 
-Transform Transform::scale(const float &x, const float &y, const float &z) {
+Transform Transform::scale(const float &x, const float &y,
+                           const float &z) const {
     Transform t;
     t.m[0][0] = x;
     t.m[0][1] = 0;
@@ -180,10 +182,12 @@ Transform Transform::scale(const float &x, const float &y, const float &z) {
     return t;
 }
 
-Transform Transform::scale(const Vector &v) { return scale(v.x, v.y, v.z); }
+Transform Transform::scale(const Vector &v) const {
+    return scale(v.x, v.y, v.z);
+}
 
 Transform Transform::scaleLocal(float factor, const Vector &origin,
-                                const Vector &direction) {
+                                const Vector &direction) const {
     Transform t;
     factor = 1 - factor;
     t.m[0][0] = 1 - factor * direction.x * direction.x;
@@ -201,10 +205,10 @@ Transform Transform::scaleLocal(float factor, const Vector &origin,
     return t;
 }
 
-Transform Transform::rotateX(float angle) {
+Transform Transform::rotateX(float angle) const {
     Transform t;
-    float sin_t = sin(angle);
-    float cos_t = cos(angle);
+    const float sin_t = sin(angle);
+    const float cos_t = cos(angle);
     t.m[0][0] = 1;
     t.m[0][1] = 0;
     t.m[0][2] = 0;
@@ -224,10 +228,10 @@ Transform Transform::rotateX(float angle) {
     return t;
 }
 
-Transform Transform::rotateY(float angle) {
+Transform Transform::rotateY(float angle) const {
     Transform t;
-    float sin_t = sin(angle);
-    float cos_t = cos(angle);
+    const float sin_t = sin(angle);
+    const float cos_t = cos(angle);
     t.m[0][0] = cos_t;
     t.m[0][1] = 0;
     t.m[0][2] = sin_t;
@@ -247,10 +251,10 @@ Transform Transform::rotateY(float angle) {
     return t;
 }
 
-Transform Transform::rotateZ(float angle) {
+Transform Transform::rotateZ(float angle) const {
     Transform t;
-    float sin_t = sin(angle);
-    float cos_t = cos(angle);
+    const float sin_t = sin(angle);
+    const float cos_t = cos(angle);
     t.m[0][0] = cos_t;
     t.m[0][1] = -sin_t;
     t.m[0][2] = 0;
@@ -270,7 +274,7 @@ Transform Transform::rotateZ(float angle) {
     return t;
 }
 
-Transform Transform::transpose() {
+Transform Transform::transpose() const {
     Transform t;
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
@@ -278,10 +282,10 @@ Transform Transform::transpose() {
     return t;
 }
 
-Transform Transform::rotateAxis(float angle, const Vector &axis) {
+Transform Transform::rotateAxis(float angle, const Vector &axis) const {
     Transform t;
-    float s = sin(angle);
-    float c = cos(angle);
+    const float s = sin(angle);
+    const float c = cos(angle);
     t.m[0][0] = axis.x * axis.x + (1 - axis.x * axis.x) * c;
     t.m[0][1] = axis.x * axis.y * (1 - c) - axis.z * s;
     t.m[0][2] = axis.x * axis.z * (1 - c) + axis.y * s;
@@ -301,7 +305,7 @@ Transform Transform::rotateAxis(float angle, const Vector &axis) {
     return t;
 }
 
-float Transform::determinant() {
+float Transform::determinant() const {
     return m[0][0] * m[1][1] * m[2][2] * m[3][3] -
            m[0][0] * m[1][1] * m[2][3] * m[3][2] +
            m[0][0] * m[1][2] * m[2][3] * m[3][1] -
@@ -328,16 +332,17 @@ float Transform::determinant() {
            m[0][3] * m[1][2] * m[2][1] * m[3][0];
 }
 
-Vector Transform::getEuler() {
-
+Vector Transform::getEuler() const {
     return Vector(atan2(m[2][1], m[2][2]),
                   atan2(-m[2][0], sqrt(m[2][1] * m[2][1] + m[2][2] * m[2][2])),
                   atan2(m[1][0], m[0][0]));
 }
 
-Vector Transform::getTranslate() { return Vector(m[0][3], m[1][3], m[2][3]); }
+Vector Transform::getTranslate() const {
+    return Vector(m[0][3], m[1][3], m[2][3]);
+}
 
-Transform Transform::orthographic(float znear, float zfar) {
+Transform Transform::orthographic(float znear, float zfar) const {
     Transform s, t;
     s.scale(1, 1, 1 / (zfar - znear));
     t.translate(0.f, 0.f, -znear);
@@ -345,13 +350,13 @@ Transform Transform::orthographic(float znear, float zfar) {
     return t;
 }
 
-Transform Transform::perspective(float fov, float n, float f) {
+Transform Transform::perspective(float fov, float n, float f) const {
     Transform t, s;
     t.m[2][2] = f / (f - n);
     t.m[2][3] = -f * n / (f - n);
     t.m[3][2] = 1;
     t.m[3][3] = 0;
-    float invTanAng = 1 / tanf(fov / 2);
+    const float invTanAng = 1 / tanf(fov / 2);
     s = s.scale(invTanAng, invTanAng, 1);
     t = s * t;
     return t;

@@ -23,10 +23,10 @@ class Vert {
     std::vector<Edge *> edges;
     std::vector<Face *> faces;
 
-    float dot(const Vert &other);
-    Vector cross(const Vert &other);
-    std::vector<Vert *> neighbors();
-    Vector computeNormal();
+    float dot(const Vert &other) const;
+    Vector cross(const Vert &other) const;
+    std::vector<Vert *> neighbors() const;
+    Vector computeNormal() const;
 };
 
 class Edge {
@@ -35,11 +35,12 @@ class Edge {
 
     unsigned int id;
     Vert *verts[2];
-    std::vector<Face *> faces; // Face * f = new Face();
+    std::vector<Face *> faces;
 
-    Vector computeNormal();
+    Vector computeNormal() const;
 
     Vert *operator[](const size_t &index) { return verts[index]; }
+    Vert *operator[](const size_t &index) const { return verts[index]; }
 };
 
 class Face {
@@ -51,12 +52,13 @@ class Face {
     std::vector<Edge *> edges;
     Vector normal;
 
-    std::vector<Vert *> toPairs();
-    bool isPointInside(Vector v);
-    Vector computeNormal();
-    Vector computeCenter();
+    std::vector<Vert *> toPairs() const;
+    bool isPointInside(const Vector &v) const;
+    Vector computeNormal() const;
+    Vector computeCenter() const;
 
     Vert *operator[](const size_t &index) { return verts[index]; }
+    Vert *operator[](const size_t &index) const { return verts[index]; }
 };
 
 class Mesh {

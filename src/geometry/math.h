@@ -15,7 +15,7 @@ float max(float a, float b);
 float min(float a, float b);
 float fit(float p, float oldmin, float oldmax, float newmin, float newmax);
 Vector solveCubic(float a, float b, float c, float d);
-bool pointInPoly(const Vector &point, std::vector<Vector> poly);
+bool pointInPoly(const Vector &point, const std::vector<Vector> &poly);
 float interpolateBezier(float t, float p0, float p1, float p2, float p3);
 float interpolateCatmullRom(float t, float p0, float p1, float p2, float p3);
 Vector getBarycentric(const Vector &p, const Vector &a, const Vector &b,

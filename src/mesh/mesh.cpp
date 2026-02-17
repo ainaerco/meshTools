@@ -3,11 +3,11 @@
 namespace meshTools {
 namespace Mesh {
 
-float Vert::dot(const Vert &other) { return v.dot(other.v); }
+float Vert::dot(const Vert &other) const { return v.dot(other.v); }
 
-Vector Vert::cross(const Vert &other) { return v.cross(other.v); }
+Vector Vert::cross(const Vert &other) const { return v.cross(other.v); }
 
-std::vector<Vert *> Vert::neighbors() {
+std::vector<Vert *> Vert::neighbors() const {
     std::vector<Vert *> n;
     for (int i = 0; i < edges.size(); i++) {
         n.push_back(edges[i]->verts[0]);
@@ -16,8 +16,8 @@ std::vector<Vert *> Vert::neighbors() {
     return n;
 }
 
-Vector Vert::computeNormal() {
-    std::vector<Vert *> n = neighbors();
+Vector Vert::computeNormal() const {
+    const std::vector<Vert *> n = neighbors();
     Vector v1, v2, normal;
     for (int i = 0; i < n.size() - 1; i++) {
         v1 = v - n[i]->v;
@@ -28,7 +28,7 @@ Vector Vert::computeNormal() {
     return normal;
 }
 
-Vector Edge::computeNormal() {
+Vector Edge::computeNormal() const {
     Vector normal;
     for (size_t i = 0; i < faces.size(); i++) {
         normal += faces[i]->normal;
@@ -37,9 +37,9 @@ Vector Edge::computeNormal() {
     return normal;
 }
 
-std::vector<Vert *> Face::toPairs() {
+std::vector<Vert *> Face::toPairs() const {
     std::vector<Vert *> pairs;
-    size_t vsize = verts.size();
+    const size_t vsize = verts.size();
 
     for (size_t i = 0; i < vsize; i++) {
         if (i == vsize - 1) {
@@ -53,11 +53,11 @@ std::vector<Vert *> Face::toPairs() {
     return pairs;
 }
 
-bool Face::isPointInside(Vector v) { return true; }
+bool Face::isPointInside(const Vector &v) const { return true; }
 
-Vector Face::computeNormal() {
+Vector Face::computeNormal() const {
     Vector normal;
-    size_t vsize = verts.size();
+    const size_t vsize = verts.size();
     for (size_t i = 0; i < vsize; i++) {
         if (i == vsize - 1) {
             normal += verts[i]->cross(*verts[0]);
@@ -69,9 +69,9 @@ Vector Face::computeNormal() {
     return normal;
 }
 
-Vector Face::computeCenter() {
+Vector Face::computeCenter() const {
     Vector center;
-    size_t vsize = verts.size();
+    const size_t vsize = verts.size();
     for (size_t i = 0; i < vsize; i++) {
         center += verts[i]->v;
     }

@@ -1,17 +1,16 @@
 #include "geometry/polygon.h"
-#include "geometry/math.h"
 
 namespace meshTools {
 namespace Geometry {
 
-Polygon::Polygon(const std::vector<Vector> &points, std::vector<int> indices,
-                 Vector normal)
+Polygon::Polygon(const std::vector<Vector> &points,
+                 const std::vector<int> &indices, const Vector &normal)
     : m_points(points), m_indices(indices), m_normal(normal) {
     m_size = m_indices.size();
 }
 
 // Triangulate simple polygon using minimum angle ear clipping algorithm
-std::vector<int> Polygon::triangulate() {
+std::vector<int> Polygon::triangulate() const {
     std::vector<int> resultIndices;
     float maxDot = 0.0f;
     size_t index = 0;
@@ -29,15 +28,15 @@ std::vector<int> Polygon::triangulate() {
             maxDot = dot;
         }
     }
-    size_t first = (int)index - 1 < 0 ? m_size - 1 : index - 1;
+    const size_t first = (int)index - 1 < 0 ? m_size - 1 : index - 1;
     resultIndices.push_back(m_indices[first]);
     resultIndices.push_back(m_indices[index]);
     resultIndices.push_back(m_indices[(index + 1) % m_size]);
     if (m_indices.size() > 3) {
         std::vector<int> indices(m_indices);
         indices.erase(indices.begin() + index);
-        Polygon poly(m_points, indices, m_normal);
-        std::vector<int> triIndices = poly.triangulate();
+        const Polygon poly(m_points, indices, m_normal);
+        const std::vector<int> triIndices = poly.triangulate();
         resultIndices.insert(resultIndices.end(), triIndices.begin(),
                              triIndices.end());
     }

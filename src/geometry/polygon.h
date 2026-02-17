@@ -7,9 +7,9 @@ namespace Geometry {
 
 class Polygon {
   public:
-    Polygon(const std::vector<Vector> &points, std::vector<int> indices,
-            Vector normal);
-    std::vector<int> triangulate();
+    Polygon(const std::vector<Vector> &points, const std::vector<int> &indices,
+            const Vector &normal);
+    std::vector<int> triangulate() const;
 
   private:
     std::vector<Vector> m_points;

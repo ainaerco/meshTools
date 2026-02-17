@@ -18,26 +18,27 @@ class Transform {
 
     float m[4][4];
 
-    std::string toString();
-    Transform identity();
-    Transform lookAt(const Vector &pos, const Vector &look, const Vector &up);
-    Transform invert();
-    Transform translate(const Vector &v);
-    Transform translate(const float &x, const float &y, const float &z);
-    Transform scale(const Vector &v);
-    Transform scale(const float &x, const float &y, const float &z);
+    std::string toString() const;
+    Transform identity() const;
+    Transform lookAt(const Vector &pos, const Vector &look,
+                     const Vector &up) const;
+    Transform invert() const;
+    Transform translate(const Vector &v) const;
+    Transform translate(const float &x, const float &y, const float &z) const;
+    Transform scale(const Vector &v) const;
+    Transform scale(const float &x, const float &y, const float &z) const;
     Transform scaleLocal(float factor, const Vector &origin,
-                         const Vector &direction);
-    Transform rotateX(float angle);
-    Transform rotateY(float angle);
-    Transform rotateZ(float angle);
-    Transform transpose();
-    Transform rotateAxis(float angle, const Vector &axis);
-    Transform orthographic(float znear, float zfar);
-    Transform perspective(float fov, float n, float f);
-    float determinant();
-    Vector getEuler();
-    Vector getTranslate();
+                         const Vector &direction) const;
+    Transform rotateX(float angle) const;
+    Transform rotateY(float angle) const;
+    Transform rotateZ(float angle) const;
+    Transform transpose() const;
+    Transform rotateAxis(float angle, const Vector &axis) const;
+    Transform orthographic(float znear, float zfar) const;
+    Transform perspective(float fov, float n, float f) const;
+    float determinant() const;
+    Vector getEuler() const;
+    Vector getTranslate() const;
 
     friend const Transform operator*(const Transform &left,
                                      const Transform &right) {
@@ -51,7 +52,10 @@ class Transform {
         return r;
     }
 
-    void operator=(Transform other) { memcpy(&other.m, &m, sizeof(m)); }
+    Transform &operator=(const Transform &other) {
+        memcpy(&m, &other.m, sizeof(m));
+        return *this;
+    }
 
     Transform &operator*=(const Transform &other) {
         float r[4][4];
@@ -64,6 +68,7 @@ class Transform {
     }
 
     float *operator[](const size_t &index) { return m[index]; }
+    const float *operator[](const size_t &index) const { return m[index]; }
 };
 
 } // namespace Geometry

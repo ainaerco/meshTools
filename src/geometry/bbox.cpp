@@ -2,11 +2,11 @@
 #include <geometry/bbox.h>
 #include <geometry/math.h>
 #include <geometry/transform.h>
-#include <iostream>
+
 namespace meshTools {
 namespace Geometry {
 
-void Bbox::fromPointSet(std::vector<Vector> pointset) {
+void Bbox::fromPointSet(const std::vector<Vector> &pointset) {
     std::vector<Vector> sorted_pointset;
     sorted_pointset = sortedVectorArray(pointset, 0);
     min.x = sorted_pointset.front().x;
@@ -20,9 +20,9 @@ void Bbox::fromPointSet(std::vector<Vector> pointset) {
     calcCenter();
 }
 void swap(float first[3], float second[3]) { std::swap(first, second); }
-void Bbox::obbFromPointSet(std::vector<Vector> pointset) {
+void Bbox::obbFromPointSet(const std::vector<Vector> &pointset) {
     Vector means;
-    size_t pointset_size = pointset.size();
+    const size_t pointset_size = pointset.size();
     for (size_t i = 0; i < pointset_size; i++) {
         means += pointset[i];
     }
@@ -47,7 +47,7 @@ void Bbox::obbFromPointSet(std::vector<Vector> pointset) {
     d = m[0][0] * m[1][1] * m[2][2] - m[0][1] * m[1][0] * m[2][2] -
         m[1][2] * m[2][1] * m[0][0] - m[0][2] * m[2][0] * m[1][1] +
         m[0][1] * m[1][2] * m[2][0] + m[0][2] * m[1][0] * m[2][1];
-    Vector roots = math::solveCubic(a, b, c, d);
+    const Vector roots = math::solveCubic(a, b, c, d);
     for (int i = 0; i < 3; i++) {
         memcpy(&mc, &m, sizeof(m));
         mc[0][0] -= roots[i];

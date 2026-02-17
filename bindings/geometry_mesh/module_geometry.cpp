@@ -1,5 +1,4 @@
 #include <cstddef>
-#include <cstdint>
 
 #include <nanobind/nanobind.h>
 #include <nanobind/operators.h>
@@ -18,7 +17,7 @@ using namespace nb::literals;
 namespace meshTools {
 namespace Geometry {
 
-template <class T, class B> static T getitem(B &v, size_t index) {
+template <class T, class B> static T getitem(const B &v, size_t index) {
     return v[index];
 }
 
@@ -120,14 +119,18 @@ void export_geometry_module(nb::module_ &m) {
         .def(nb::init<Vector, Vector, Vector>())
         .def("lookAt", &Transform::lookAt)
         .def("translate",
-             nb::overload_cast<const float &, const float &, const float &>(
+             static_cast<Transform (Transform::*)(const float &, const float &,
+                                                  const float &) const>(
                  &Transform::translate))
         .def("translate",
-             nb::overload_cast<const Vector &>(&Transform::translate))
-        .def("scale", nb::overload_cast<const Vector &>(&Transform::scale))
+             static_cast<Transform (Transform::*)(const Vector &) const>(
+                 &Transform::translate))
         .def("scale",
-             nb::overload_cast<const float &, const float &, const float &>(
+             static_cast<Transform (Transform::*)(const Vector &) const>(
                  &Transform::scale))
+        .def("scale", static_cast<Transform (Transform::*)(
+                          const float &, const float &, const float &) const>(
+                          &Transform::scale))
         .def("identity", &Transform::identity)
         .def("invert", &Transform::invert)
         .def("transpose", &Transform::transpose)

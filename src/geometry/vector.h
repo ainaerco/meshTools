@@ -10,34 +10,30 @@ namespace Geometry {
 class Transform;
 class Vector {
   public:
-    Vector()
-        : x(0.0), y(0.0), z(0.0) {}
-    Vector(std::vector<float> a)
-        : x(a[0]), y(a[1]), z(a[2]) {}
+    Vector() : x(0.0), y(0.0), z(0.0) {}
+    Vector(const std::vector<float> &a) : x(a[0]), y(a[1]), z(a[2]) {}
 
-    Vector(float a[3])
-        : x(a[0]), y(a[1]), z(a[2]) {}
+    Vector(float a[3]) : x(a[0]), y(a[1]), z(a[2]) {}
 
-    Vector(float a, float b, float c)
-        : x(a), y(b), z(c) {}
+    Vector(float a, float b, float c) : x(a), y(b), z(c) {}
 
-    std::vector<float> toList();
-    std::string toString();
-    Vector setLength(float length);
-    Vector normalize();
-    bool isNull();
-    bool zeroTest();
-    float lengthSquared();
-    float length();
-    float angle(Vector other);
-    float dot(const Vector &other);
-    Vector cross(const Vector &other);
-    Vector lerp(Vector other, float factor);
-    Vector slerp(Vector other, float factor);
-    Vector project(Vector other);
-    Vector reflect(Vector other);
-    Vector rotateAround(Vector axis, float angle);
-    Vector applyTransform(Transform t);
+    std::vector<float> toList() const;
+    std::string toString() const;
+    Vector setLength(float length) const;
+    Vector normalize() const;
+    bool isNull() const;
+    bool zeroTest() const;
+    float lengthSquared() const;
+    float length() const;
+    float angle(const Vector &other) const;
+    float dot(const Vector &other) const;
+    Vector cross(const Vector &other) const;
+    Vector lerp(const Vector &other, float factor) const;
+    Vector slerp(const Vector &other, float factor) const;
+    Vector project(const Vector &other) const;
+    Vector reflect(const Vector &other) const;
+    Vector rotateAround(const Vector &axis, float angle) const;
+    Vector applyTransform(const Transform &t) const;
 
     float x;
     float y;
@@ -99,9 +95,9 @@ class Vector {
                  (left.z == right.z));
     }
 
-    Vector operator-() { return Vector(-x, -y, -z); }
+    Vector operator-() const { return Vector(-x, -y, -z); }
 
-    float operator[](const size_t &index) {
+    float operator[](const size_t &index) const {
         if (index == 0) {
             return x;
         } else if (index == 1) {
@@ -120,7 +116,7 @@ class Vector {
 };
 
 bool sortVectorArray(std::vector<Vector> &v, int axis);
-std::vector<Vector> sortedVectorArray(std::vector<Vector> v, int axis);
+std::vector<Vector> sortedVectorArray(const std::vector<Vector> &v, int axis);
 
 } // namespace Geometry
 } // namespace meshTools

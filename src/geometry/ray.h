@@ -10,17 +10,18 @@ namespace Geometry {
 
 class Ray {
   public:
-    Ray(Vector o, Vector d) : origin(o), direction(d) {}
+    Ray(const Vector &o, const Vector &d) : origin(o), direction(d) {}
 
     Vector origin;
     Vector direction;
 
-    bool pointPlaneSide(Vector point);
-    float pointDistance(Vector point);
-    Vector pointProjection(Vector point);
-    Vector triangleRayHit(Vector triangle[3]);
-    Vector segmentPlaneHit(Vector segment0, Vector segment1);
-    Vector intersectRayLine(Vector p1, Vector p2);
+    bool pointPlaneSide(const Vector &point) const;
+    float pointDistance(const Vector &point) const;
+    Vector pointProjection(const Vector &point) const;
+    Vector triangleRayHit(const Vector triangle[3]) const;
+    Vector segmentPlaneHit(const Vector &segment0,
+                           const Vector &segment1) const;
+    Vector intersectRayLine(const Vector &p1, const Vector &p2) const;
 };
 
 } // namespace Geometry

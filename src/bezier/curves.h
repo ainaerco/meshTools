@@ -29,8 +29,8 @@ inline float B(const int &n, float t)
 
 class Lagrange {
   public:
-    Lagrange() {};
-    Lagrange(std::vector<float> points) {
+    Lagrange() {}
+    Lagrange(const std::vector<float> &points) {
         mPoints = points;
         mNumPoints = points.size();
     }
@@ -43,8 +43,8 @@ class Lagrange {
 
 class Bezier {
   public:
-    Bezier() {};
-    Bezier(std::vector<float> points) {
+    Bezier() {}
+    Bezier(const std::vector<float> &points) {
         mPoints = points;
 
         mNumPoints = points.size();
@@ -58,8 +58,8 @@ class Bezier {
 
 class Spline {
   public:
-    Spline() {};
-    Spline(std::vector<float> points) {
+    Spline() {}
+    Spline(const std::vector<float> &points) {
         mPoints = points;
         mNumPoints = points.size();
     }
