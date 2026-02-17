@@ -60,7 +60,25 @@ meshTools/
 
 ## Building
 
-Requires **CMake 3.18+** and **Python 3.12** (development headers). nanobind is fetched automatically via FetchContent.
+Requires **CMake 3.18+** and **Python 3.12** (development headers). nanobind is fetched automatically.
+
+### Installable (recommended)
+
+Install the package and its C++ extensions into your environment:
+
+```bash
+pip install .
+# or editable install:
+pip install -e .
+# or with uv:
+uv pip install -e .
+```
+
+This uses [scikit-build-core](https://scikit-build-core.readthedocs.io/) to run CMake, build the extensions, and install the `meshTools` package (including `_geometry`, `_mesh`, `_bezier`) into your Python environment. No need to set `MESHTOOLS_BUILD_DIR` when running tests after install.
+
+### Standalone CMake
+
+Build without installing; extensions end up in `build/scripts` (or per-target dirs). Useful for development.
 
 ```bash
 mkdir build && cd build
@@ -69,6 +87,8 @@ cmake --build .
 ```
 
 On Windows, use a generator such as `-G "Visual Studio 17 2022" -A x64` if not using Ninja.
+
+When running tests from the repo without installing, `tests/conftest.py` adds the build output and `python/` to `sys.path` so the package and extensions are found.
 
 The build produces Python extension modules (`.so` on Linux, `.pyd` on Windows) that are imported by the Python package:
 

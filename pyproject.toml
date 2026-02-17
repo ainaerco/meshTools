@@ -1,3 +1,7 @@
+[build-system]
+requires = ["scikit-build-core", "cmake", "ninja"]
+build-backend = "scikit_build_core.build"
+
 [project]
 name = "meshtools"
 version = "0.1.0"
@@ -8,6 +12,9 @@ dependencies = [
     "pytest>=9.0.2",
     "ruff>=0.15.1",
 ]
+
+[tool.scikit-build]
+wheel.packages = ["python/"]
 
 [tool.ruff]
 line-length = 80

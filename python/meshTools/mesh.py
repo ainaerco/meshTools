@@ -3,7 +3,7 @@ import math  # degrees,tan,pi,sin,cos,modf
 from copy import copy
 from time import time
 
-from geometry import (
+from .geometry import (
     BBox,
     EPSILON,
     OBBox,
@@ -15,12 +15,12 @@ from geometry import (
     fit,
     interpolateBezier,
 )
-from noise import Noise
+from .noise import Noise
 
-import lists
-from chull import Hull
-from delaunay import Delaunay
-from lists import CycleList
+from . import lists
+from .chull import Hull
+from .delaunay import Delaunay
+from .lists import CycleList
 
 VERBOSE = 1
 # kLoad = lists.Enumeration("empty|vertices|faces|edges|normals|bbox|pivot")

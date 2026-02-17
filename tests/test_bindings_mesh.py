@@ -2,7 +2,11 @@
 
 import pytest
 
-_mesh = pytest.importorskip("_mesh")
+pytest.importorskip("meshTools")
+from meshTools import _mesh
+
+if _mesh is None:
+    pytest.skip("_mesh extension not built")
 
 
 class TestVert:

@@ -2,7 +2,11 @@
 
 import pytest
 
-_bezier = pytest.importorskip("_bezier")
+pytest.importorskip("meshTools")
+from meshTools import _bezier
+
+if _bezier is None:
+    pytest.skip("_bezier extension not built")
 
 
 class TestBezier:

@@ -1,6 +1,6 @@
 from copy import copy
 
-from geometry import EPSILON
+from .geometry import EPSILON
 
 
 class Polygon:

@@ -1,7 +1,10 @@
 """Pytest configuration and path setup for meshTools binding tests.
 
-Ensures the build output (extensions) and Python package are on sys.path.
-Run from repo root after building; optionally set MESHTOOLS_BUILD_DIR.
+When the package is installed (pip install), meshTools and its extensions
+are found from site-packages. When running from a development tree, this
+conftest adds the build output (extensions) and python/ to sys.path so
+extensions and the meshTools package are found. Run from repo root after
+building; optionally set MESHTOOLS_BUILD_DIR.
 """
 
 import sys

@@ -1,21 +1,42 @@
-from _geometry import (
-    BBox,
-    Transform,
-    Vector,
-    Ray,
-    Polygon,
-    epsilonTest,
-    pointInPoly,
-    interpolateBezier,
-    interpolateCatmullRom,
-    lerp,
-    solveCubic,
-    fit,
-    min,
-    max,
-    getBarycentric,
-    sortedVectorArray,
-)
+# Prefer package-internal extension (pip install); fall back to top-level (dev with build on path)
+try:
+    from ._geometry import (
+        BBox,
+        Transform,
+        Vector,
+        Ray,
+        Polygon,
+        epsilonTest,
+        pointInPoly,
+        interpolateBezier,
+        interpolateCatmullRom,
+        lerp,
+        solveCubic,
+        fit,
+        min,
+        max,
+        getBarycentric,
+        sortedVectorArray,
+    )
+except ImportError:
+    from _geometry import (
+        BBox,
+        Transform,
+        Vector,
+        Ray,
+        Polygon,
+        epsilonTest,
+        pointInPoly,
+        interpolateBezier,
+        interpolateCatmullRom,
+        lerp,
+        solveCubic,
+        fit,
+        min,
+        max,
+        getBarycentric,
+        sortedVectorArray,
+    )
 
 # Backward compatibility: OBBox was used in mesh.py for oriented bbox
 OBBox = BBox

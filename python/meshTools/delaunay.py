@@ -1,4 +1,4 @@
-from geometry import Point, Transform, fit
+from .geometry import Point, Transform, fit
 from random import random
 
 

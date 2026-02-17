@@ -1,4 +1,4 @@
-from geometry import Point, Vector
+from .geometry import Point, Vector
 
 debug = False
 
