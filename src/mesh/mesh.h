@@ -68,9 +68,6 @@ class Mesh {
     std::vector<Edge *> edges;
     std::vector<Face *> faces;
     Bbox bbox;
-
-    // void selectGroups();
-    // void selectConvert();
 };
 
 } // namespace Mesh

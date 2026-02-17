@@ -24,7 +24,6 @@ from .delaunay import Delaunay
 from .lists import CycleList
 
 VERBOSE = 1
-# kLoad = lists.Enumeration("empty|vertices|faces|edges|normals|bbox|pivot")
 kGeotype = lists.Enumeration("face|edge|vertex")
 kResult = lists.Enumeration("updateVertex|updateMesh|updateSelection")
 
@@ -116,8 +115,6 @@ class Mesh(object):
             border_edges.append(
                 [self.faces[f][len(self.faces[f]) - 1], self.faces[f][0]]
             )
-        # print border_edges
-
         # remove duplicates
         border = []
         for i in range(0, len(border_edges)):
@@ -131,8 +128,6 @@ class Mesh(object):
                 == 1
             ):
                 border.append(border_edges[i])
-
-        # print border
 
         # sort 2d
         def srt(k):
@@ -156,7 +151,6 @@ class Mesh(object):
             return n
 
         lst = srt(border)
-        # print lst
 
         # get first element only
         border_vertices = []
@@ -168,7 +162,6 @@ class Mesh(object):
         return border_vertices
 
     def __selectFaceBordersEx(self, select):
-        # border_vertices = self.__selectFaceBorders(select)
         border_edges = []
         # separate by pairs
         for f in select:
@@ -177,8 +170,6 @@ class Mesh(object):
             border_edges.append(
                 [self.faces[f][len(self.faces[f]) - 1], self.faces[f][0]]
             )
-        # print border_edges
-
         # remove duplicates
         border = []
         border_reject = []
@@ -195,8 +186,6 @@ class Mesh(object):
                 border.append(border_edges[i])
             else:
                 border_reject.append(border_edges[i])
-        # print border
-        # print border_reject
 
         # sort 2d
         def srt(k):
@@ -220,7 +209,6 @@ class Mesh(object):
             return n
 
         lst = srt(border)
-        # print lst
 
         # get first element only
         border_vertices = []
@@ -235,7 +223,6 @@ class Mesh(object):
             border_group_dup.append([])
             for k in range(0, len(border_vertices[i])):
                 for j in select:
-                    # print border_vertices[i][k],self.faces[j]
                     if border_vertices[i][k] in self.faces[j]:
                         border_group_dup[len(border_group_dup) - 1].extend([j])
         # remove group duplicates
@@ -299,7 +286,6 @@ class Mesh(object):
         return borders
 
     def __selectVertexGroups(self, verts):
-        # print verts
         cverts = copy(verts)
         vert_groups = [[cverts[0]]]
         passed_verts = [cverts[0]]
@@ -325,30 +311,21 @@ class Mesh(object):
                 passed_verts += [cverts[0]]
             cverts = cverts[1:]
 
-            # print "vert_groups",vert_groups
-            # print "cverts",cverts
-
             if count > 1:
                 finds.sort()
-                # print finds
                 vert_groups_combine = vert_groups[: finds[0]]
-                # print "vert_groups_combine",vert_groups_combine
                 for i in range(len(finds) - 1):
                     vert_groups_combine += vert_groups[
                         finds[i] + 1 : finds[i + 1]
                     ]
                 vert_groups_combine += vert_groups[finds[-1] + 1 :]
-                # print "vert_groups_combine",vert_groups_combine
                 vert_groups_combine += [vert_groups[finds[0]]]
-                # print "vert_groups_combine",vert_groups_combine
                 for i in range(1, len(finds)):
                     vert_groups_combine[-1] += vert_groups[finds[i]]
                 vert_groups = vert_groups_combine
-                # print "vert_groups",vert_groups
 
         for i in range(len(vert_groups)):
             vert_groups[i] = lists.group_duplicates(vert_groups[i])
-        # print vert_groups
         return vert_groups
 
     def __selectConvertVF2(self, edges):
@@ -369,7 +346,6 @@ class Mesh(object):
                         [[self.faces[i][j + 1], self.faces[i][j]]]
                     )
         sel_faces = []
-        # print mesh_edges
         for i in range(0, len(self.faces)):
             for edge in edges:
                 if edge in mesh_edges[i]:
@@ -459,7 +435,6 @@ class Mesh(object):
     def __selectLoopGroupAnchors(self, border):
         anchors = []
         anchor_faces = []
-        # print border
         for i in range(len(border)):
             faces = self.__selectConvertVF([border[i]])
             if i == len(border) - 1:
@@ -467,31 +442,23 @@ class Mesh(object):
             else:
                 inc = 1
             loop_face_verts = []
-            # print
-            # print "search vert",border[i]
-            # print "next vert",border[i+inc]
             for face in faces:
                 if border[i + inc] in self.faces[face]:
                     loop_face_verts += self.faces[face]
-            # print border[i],faces
             neighbors = self.findVertexNeighbor(border[i], faces)
             neighbors = lists.leave_duplicates(neighbors, loop_face_verts)
             neighbors = lists.remove_duplicates(neighbors, [border[i + inc]])
-            # print i,border[i],neighbors
             if i > 0:
                 anchor_faces_old = anchor_faces
             else:
                 anchor_faces_old = self.__selectConvertVF([border[i]])
             anchor_faces = self.__selectConvertVF([neighbors[0]])
-            # print "anchor_faces",anchor_faces
-            # print "anchor_faces_old",anchor_faces_old
             anchor_similar_face = lists.leave_duplicates(
                 anchor_faces, anchor_faces_old
             )
             if len(anchor_similar_face) == 0:
                 neighbors = neighbors[::-1]
                 anchor_faces = self.__selectConvertVF([neighbors[0]])
-            # print "anchor_similar_face",anchor_similar_face
 
             if len(neighbors) == 2:
                 anchors += [neighbors]
@@ -662,17 +629,13 @@ class Mesh(object):
         for i in range(len(self.faces)):
             sorted_normals.append([self.normals[i], i])
         sorted_normals.sort(sort_normals)
-        # for i in range(len(self.faces)):
-        # print(i,sorted_normals[i][0],sorted_normals[i][1])
         for face in sel_faces:
             normal = self.normals[face]
             find = find_normal(sorted_normals, normal, delta)
             for i in range(find[0], find[1]):
                 new_sel_faces.append(sorted_normals[i][1])
 
-        # new_sel_faces += sel_faces
         new_sel_faces = lists.group_duplicates(new_sel_faces)
-        # print new_sel_faces
         return new_sel_faces
 
     """                                        MISCELLANEOUS                                          """
@@ -726,7 +689,6 @@ class Mesh(object):
 
     def __sortVerticesCCW(self, sel_verts):
         center = Point()
-        # print sel_verts
         new_verts = []
         vert_angles = []
         for i in range(len(sel_verts)):
@@ -747,9 +709,7 @@ class Mesh(object):
             face_vert = t1.applyTransform(self.vertices[sel_verts[i]])
             face_vert = t2.applyTransform(face_vert)
             vert_angles[i].extend([face_vert])
-            # wself.vertices[sel_verts[i]]=face_vert
 
-        # print vert_angles
         def clockwise_sort(a, b):
             if a[1].x >= 0 and b[1].x < 0:
                 return -1
@@ -766,7 +726,6 @@ class Mesh(object):
         vert_angles.sort(clockwise_sort)
         for i in range(len(sel_verts)):
             new_verts.append(vert_angles[i][0])
-        # print new_verts
         # self.faces[0]=new_verts
         return new_verts
 
@@ -787,8 +746,6 @@ class Mesh(object):
                 else:
                     verts_swap = verts_swap[1:]
             i += 1
-        # print swap
-        # swap.sort()
 
         start_time = time()
         for k in range(len(swap)):
@@ -891,12 +848,9 @@ class Mesh(object):
         # first and second are ids | corner not implemented
         face_cycle = CycleList(self.faces[sel_face])
         new_faces = []
-        # print face_cycle
-        # print "first,second ",first,second
         for i in range(1, connections):
             first_con = first + i
             second_con = second - i
-            # print face_cycle[first_con],face_cycle[first_con+1],face_cycle[second_con-1],face_cycle[second_con]
             new_faces.append(
                 [
                     face_cycle[second_con],
@@ -911,7 +865,6 @@ class Mesh(object):
             ).list
         ]
         new_faces += [face_cycle.list[second:] + [face_cycle.list[0]]]
-        # print new_faces
         return new_faces
 
     """                                        OPERATIONS                                             """
@@ -1189,8 +1142,6 @@ class Mesh(object):
 
         start_time = time() - start_time
         printv(start_time, "point side test Elapsed", 2)
-        # print "faces_rejected ",faces_rejected
-        # print "faces_involved ",faces_involved
         start_time = time()
 
         computed_edges = []
@@ -1230,10 +1181,6 @@ class Mesh(object):
                             [computed_points[int(find / 2)]]
                         )
 
-        # print "face_points",faces_points
-        # print "computed_edges",computed_edges
-        # print "verts_sides ",verts_sides
-        # print "computed_points",computed_points
         start_time = time() - start_time
         printv(start_time, "intersection Elapsed", 2)
 
@@ -1291,13 +1238,8 @@ class Mesh(object):
                     sorted_verts = sorted_verts[::-1]
                 pair_sorted_verts = [sorted_verts]
 
-            # print "face",faces_involved[facenum]
-            # print "face=",self.faces[faces_involved[facenum]]
-            # print "sorted_verts",sorted_verts
-            # print "pair_sorted_verts",pair_sorted_verts
             edges = self.__selectConvertFEV([faces_involved[facenum]])
             edges_bottom = copy(edges)
-            # print "old_edges",edges
             for j in range(len(edges)):
                 if (
                     not verts_sides[edges[j][0]]
@@ -1336,15 +1278,12 @@ class Mesh(object):
                                 edges_bottom[j] = pair_sorted_verts[findy][
                                     ::-1
                                 ] + [edges_bottom[j][1]]
-            # print "new edges",edges
-            # print "bottom edges",edges_bottom
             ret = []
             while edges:
                 edges, g = build_poly(edges)
                 ret.append(g)
             for i in range(len(ret)):
                 ret[i] = lists.group_duplicates(ret[i])
-            # print "new faces",ret
             self.updateFace(faces_involved[facenum], ret[0])
             self.addFaces(ret[1:])
 
@@ -1355,15 +1294,11 @@ class Mesh(object):
                     ret.append(g)
                 for i in range(len(ret)):
                     ret[i] = lists.group_duplicates(ret[i])
-                # print "new faces",ret
-                # self.updateFace(faces_involved[facenum],ret[0])
                 self.addFaces([ret[0]])
                 self.addFaces(ret[1:])
 
         start_time = time() - start_time
         printv(start_time, "build new faces Elapsed", 2)
-        # print("faces_rejected",faces_rejected,len(faces_rejected))
-        # print("verts_rejected",verts_rejected,len(verts_rejected))
         if delete_remains:
             self.__deleteVertices(verts_rejected)
             self.__deleteFaces(faces_rejected)
@@ -1715,7 +1650,6 @@ class Mesh(object):
                             self.updateFace(face, face1)
                             self.addFace(face2)
 
-                            # print "find connect",min(vert,selection[connect_vert])," ",max(vert,selection[connect_vert])," face ",face
         return [kResult.updateMesh]
 
     def recursiveFillCorner(
@@ -1815,17 +1749,10 @@ class Mesh(object):
             for i in range(0, corner_sides):
                 we = int((i) * (divisions - 1))
                 new_corner.append(inner_points[we])
-        """
-        print outer_points
-        print inner_points
-        print corner
-        print new_corner
-        """
         # fills sides
         k = 0
         for i in range(0, corner_sides):
             for j in range(0, divisions - 1):
-                # print i*divisions+j,i*divisions+j+1,
                 if is_even == 0:
                     if k - 1 >= 0:
                         new_faces.append(
@@ -1990,7 +1917,6 @@ class Mesh(object):
         for face in faces_involved:
             new_face = copy(self.faces[face])
             for vertex in vertices_involved:
-                # print "test vertex ", vertex
                 neighbors = self.findVertexNeighbor(vertex, [face])
                 if len(neighbors) > 0:
                     edge_vertex = copy(neighbors)
@@ -2013,7 +1939,6 @@ class Mesh(object):
                         a = -v2.setLength(chamfer_size)
                     else:
                         # corner vertex
-                        # print "edge_vertices ",edge_vertex
                         v1 = Vector()
                         v1.fromPoints(
                             self.vertices[vertex], self.vertices[edge_vertex[0]]
@@ -2045,10 +1970,6 @@ class Mesh(object):
             self.faces[face] = copy(new_face)
 
         chamfer_data = lists.group_by_1st(chamfer_data)
-        # for face in faces_involved:
-        # for i in range(0,len(vertices_involved)):
-        # sel = lists.find(self.faces[face],vertices_involved[])
-        # print sel
 
         logger.debug("chamfer_data %s edges %s", chamfer_data, edges)
         for chamfer_element in chamfer_data:
@@ -2183,7 +2104,6 @@ class Mesh(object):
                 triangle.append(self.vertices[self.faces[j][1]])
                 hit = ray.triangleRayHit(triangle)
                 if hit != 0:
-                    # print "first"
                     self.addVertex(ray.origin + ray.direction * hit[1][2])
                     new_vertices.append(len(self.vertices) - 1)
                     hitted
@@ -2194,7 +2114,6 @@ class Mesh(object):
                 triangle.append(self.vertices[self.faces[j][2]])
                 hit = ray.triangleRayHit(triangle)
                 if hit != 0:
-                    # print "second"
                     self.addVertex(ray.origin + ray.direction * hit[1][2])
                     new_vertices.append(len(self.vertices) - 1)
                     hitted
@@ -2270,8 +2189,6 @@ class Mesh(object):
                 face_id, lists.cycle(self.faces[face_id], max_id + 2)
             )
             for i in range(0, math.modf(len(face) / 2.0)[1] - 1):
-                # print "connect pairs"
-
                 if i == 0:
                     self.addFace(
                         [
@@ -2281,8 +2198,6 @@ class Mesh(object):
                             face[len(face) - 1],
                         ]
                     )
-                    # print (face[i],face[len(face)-3-i],face[len(face)-3-i+1],face[len(face)-1])
-                    # print i,len(face)-3-i,len(face)-3-i+1,len(face)-1
                 else:
                     self.addFace(
                         [
@@ -2292,12 +2207,10 @@ class Mesh(object):
                             face[i - 1],
                         ]
                     )
-                    # print (face[i],face[len(face)-3-i],face[len(face)-3-i+1],face[i-1])
 
             if math.modf(len(face) / 2.0)[0] == 0.5:
                 i = int(math.modf(len(face) / 2.0)[1] - 2)
                 self.addFace([face[i], face[i + 1], face[len(face) - 3 - i]])
-                # print (face[i],face[i+1],face[len(face)-3-i])
         self.__deleteFaces(selection)
         return [kResult.updateMesh]
 
@@ -2324,17 +2237,13 @@ class Mesh(object):
                 self.addVertex(self.vertices[k])
                 # self.vertices.append(self.vertices[k])
                 borders[3][len(borders[3]) - 1].extend([len(self.vertices) - 1])
-            # print borders
 
             # update cap faces
             for j in borders[1][f]:
-                # print self.faces[j]
                 for k in range(0, len(self.faces[j])):
                     dup = lists.duplicates_of(borders[0][f], self.faces[j][k])
                     if len(dup) >= 1:
                         self.__updateFaceVert(j, k, borders[3][f][dup[0]])
-                        # self.faces[j][k] = borders[3][f][dup[0]]
-                # print self.faces[j]
 
             # add side faces
             borders[0][f].append(borders[0][f][0])
@@ -2396,7 +2305,6 @@ class Mesh(object):
                     b.normalize()
                     a = b.cross(v1) + b.cross(v2)
                     anglea = a.angle(v1) - math.pi / 2.0
-                    # print(math.degrees(anglea))
                     if angleb < 0.1:
                         b = b.setLength(inset)
                     else:
@@ -2411,7 +2319,6 @@ class Mesh(object):
                     continue
 
                 anglea = v1.angle(v2)
-                # print angle_between
                 logger.debug("anglea %s", anglea)
                 a = v1.cross(v2)
                 a = a.setLength(height)
@@ -2679,7 +2586,6 @@ class Mesh(object):
             )
 
             for i in range(len(border)):
-                # print anchors1[i],anchors[i][0],anchors[i][1],anchors2[i]
                 v1 = self.vertices[anchors1[i]]
                 v2 = self.vertices[anchors[i][0]]
                 self.vertices[border[i]]
@@ -2807,7 +2713,6 @@ class Mesh(object):
         # TODO split faces
         borders = self.__selectEdgesGroups(sel_edges)
         for border in borders:
-            # print border
             faces = self.__selectConvertVF(border)
             face_left = copy(self.faces[faces[0]])
             face_left_ids = [faces[0]]
@@ -2825,7 +2730,6 @@ class Mesh(object):
                             if faces[i] not in face_right_ids:
                                 face_right.extend(self.faces[faces[i]])
                                 face_right_ids.append(faces[i])
-            # print face_left_ids,face_right_ids
             new_border = lists.enumerate_list(border, len(self.vertices))
             for i in range(len(border)):
                 self.addVertex(self.vertices[border[i]])

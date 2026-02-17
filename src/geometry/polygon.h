@@ -20,5 +20,5 @@ class Polygon {
 
 } // namespace Geometry
 } // namespace meshTools
-// _MESHTOOLS_POLYGON_H
+
 #endif

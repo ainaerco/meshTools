@@ -54,13 +54,6 @@ void Bbox::obbFromPointSet(std::vector<Vector> pointset) {
         mc[1][1] -= roots[i];
         mc[2][2] -= roots[i];
 
-        /*std::cout<<"\n";
-        std::cout<<"1\n";
-        std::cout<<mc[0][0]<<" "<<mc[0][1]<<" "<<mc[0][2]<<"\n";
-        std::cout<<mc[1][0]<<" "<<mc[1][1]<<" "<<mc[1][2]<<"\n";
-        std::cout<<mc[2][0]<<" "<<mc[2][1]<<" "<<mc[2][2]<<"\n";
-        std::cout<<"\n";*/
-
         if (mc[0][0] == 0) {
             swap(mc[0], mc[2]);
         } else {
@@ -110,16 +103,12 @@ void Bbox::obbFromPointSet(std::vector<Vector> pointset) {
         max.x = std::max(max.x, v.x);
         max.y = std::max(max.y, v.y);
         max.z = std::max(max.z, v.z);
-
-        // std::cout << "p" << v << "\n";
     }
     center = (min + max) * 0.5;
     const Vector &rt = Vector(axis[0].x, axis[1].x, axis[2].x);
     const Vector &ru = Vector(axis[0].y, axis[1].y, axis[2].y);
     const Vector &rf = Vector(axis[0].z, axis[1].z, axis[2].z);
     center = Vector(center.dot(rt), center.dot(ru), center.dot(rf));
-    // std::cout << "min" << min << "\n";
-    // std::cout << "max" << max << "\n";
 }
 
 void Bbox::calcCenter() {

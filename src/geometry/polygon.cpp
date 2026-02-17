@@ -8,8 +8,6 @@ Polygon::Polygon(const std::vector<Vector> &points, std::vector<int> indices,
                  Vector normal)
     : m_points(points), m_indices(indices), m_normal(normal) {
     m_size = m_indices.size();
-    // BOOST_FOREACH(Vector& v, m_points)
-    // 	v.y = v.y + 0.1f;
 }
 
 // Triangulate simple polygon using minimum angle ear clipping algorithm

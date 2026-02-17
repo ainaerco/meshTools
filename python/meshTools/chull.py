@@ -513,7 +513,6 @@ class Hull:
             faces.append([f.vertex[0].vnum, f.vertex[1].vnum, f.vertex[2].vnum])
         vertices = []
         for vert in self.vertices:
-            # print vert.vnum
             vertices.append(Point(vert.v.x, vert.v.y, vert.v.z))
         return [faces, vertices]
 
@@ -589,5 +588,3 @@ if __name__ == "__main__":
             sphere.append(Vector(x, y, z))
     h = Hull(sphere)
     logger.info("%s", h.exportHull())
-    # print(h.debug("endresult"))
-    # h.Print()

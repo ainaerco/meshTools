@@ -10,17 +10,15 @@ namespace Geometry {
 class Transform;
 class Vector {
   public:
-    Vector() // if len(args)==0:
+    Vector()
         : x(0.0), y(0.0), z(0.0) {}
-    // const Vec3 &	operator += (const Vec3 &v);
-    // Vec3		operator + (const Vec3 &v) const;
-    Vector(std::vector<float> a) // if len(args)==1:
+    Vector(std::vector<float> a)
         : x(a[0]), y(a[1]), z(a[2]) {}
 
-    Vector(float a[3]) // if len(args)==1:
+    Vector(float a[3])
         : x(a[0]), y(a[1]), z(a[2]) {}
 
-    Vector(float a, float b, float c) // if len(args)==3:
+    Vector(float a, float b, float c)
         : x(a), y(b), z(c) {}
 
     std::vector<float> toList();
@@ -45,7 +43,6 @@ class Vector {
     float y;
     float z;
 
-    // def __add__(self,other):
     friend const Vector operator+(const Vector &left, const Vector &right) {
         return Vector(left.x + right.x, left.y + right.y, left.z + right.z);
     }
@@ -120,7 +117,6 @@ class Vector {
         os << "[" << v.x << "," << v.y << "," << v.z << "]";
         return os;
     }
-    // std::ostream& operator<<(std::ostream& os,const Vector& v)
 };
 
 bool sortVectorArray(std::vector<Vector> &v, int axis);

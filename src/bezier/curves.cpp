@@ -41,8 +41,6 @@ std::vector<float> Bezier::interpolate(const size_t &desired_num) {
 
     float delta_t = float(n / 3 + 1) / float(desired_num - 1);
     /* Construct Bezier curves for each grouping of four points. */
-    // std::cout << " delta_t " << delta_t << " desired_num " << desired_num <<
-    // "\n";
     size_t count = 0;
     for (size_t i = 0; i < n + 1; i += 3) {
         float ax, bx, cx, dx, ay, by, dy, cy, x, y;
@@ -71,8 +69,6 @@ std::vector<float> Bezier::interpolate(const size_t &desired_num) {
         cy = -3.0f * (mPoints.at(i * 2 + 1) - mPoints.at((i + 1) * 2 + 1));
         x = dx = mPoints.at(i * 2);
         y = dy = mPoints.at(i * 2 + 1);
-        // std::cout << "i  " << i << "\n";
-        // std::cout << x << "   " << y << "\n";
         res.push_back(x);
         res.push_back(y);
         count++;
@@ -80,7 +76,6 @@ std::vector<float> Bezier::interpolate(const size_t &desired_num) {
 
             x = ((ax * t + bx) * t + cx) * t + dx;
             y = ((ay * t + by) * t + cy) * t + dy;
-            // std::cout << " t " << t <<" " << x << "   " << y << "\n";
             res.push_back(x);
             res.push_back(y);
             count++;
@@ -88,7 +83,6 @@ std::vector<float> Bezier::interpolate(const size_t &desired_num) {
     }
     res.push_back(mPoints.at(mNumPoints - 2));
     res.push_back(mPoints.at(mNumPoints - 1));
-    // std::cout << "count  " << count << "\n";
     return res;
 }
 
@@ -103,15 +97,10 @@ std::vector<float> Lagrange::interpolate(const size_t &desired_num) {
         float b2 = B(2, t);
         float b3 = B(3, t);
         float b4 = B(4, t);
-        // 			x = px[0]*b1 + px[1]*b2 +
-        // 			    px[2]*b3 + px[3]*b4;
-        // 			y = py[0]*b1 + py[1]*b2 +
-        // 			    py[2]*b3 + py[3]*b4;
         x = mPoints.at(0) * b1 + mPoints.at(2) * b2 + mPoints.at(4) * b3 +
             mPoints.at(6) * b4;
         y = mPoints.at(1) * b1 + mPoints.at(3) * b2 + mPoints.at(5) * b3 +
             mPoints.at(7) * b4;
-        // std::cout << x << "  " << y << "\n";
         res.push_back(x);
         res.push_back(y);
     }
@@ -119,22 +108,17 @@ std::vector<float> Lagrange::interpolate(const size_t &desired_num) {
     /* Handle middle segments. */
 
     for (size_t i = 1; i <= mNumPoints / 3; i++) {
-        // std::cout << i << "\n";
         for (float t = delta_t; t < 1.0f + delta_t / 2.0f; t += delta_t) {
             float x, y;
             float b1 = B(1, t);
             float b2 = B(2, t);
             float b3 = B(3, t);
             float b4 = B(4, t);
-            // x = px[i - 1] * b1 + px[i] * b2 + px[i + 1] * b3 + px[i + 2] *
-            // b4; y = py[i - 1] * b1 + py[i] * b2 + py[i + 1] * b3 + py[i + 2]
-            // * b4;
             x = mPoints.at((i - 1) * 2) * b1 + mPoints.at(i * 2) * b2 +
                 mPoints.at((i + 1) * 2) * b3 + mPoints.at((i + 2) * 2) * b4;
             y = mPoints.at((i - 1) * 2 + 1) * b1 + mPoints.at(i * 2 + 1) * b2 +
                 mPoints.at((i + 1) * 2 + 1) * b3 +
                 mPoints.at((i + 2) * 2 + 1) * b4;
-            // std::cout << x << "  " << y << "\n";
             res.push_back(x);
             res.push_back(y);
         }
@@ -152,11 +136,6 @@ std::vector<float> Lagrange::interpolate(const size_t &desired_num) {
             mPoints.at(mNumPoints - 4) * b3 + mPoints.at(mNumPoints - 2) * b4;
         y = mPoints.at(mNumPoints - 7) * b1 + mPoints.at(mNumPoints - 5) * b2 +
             mPoints.at(mNumPoints - 3) * b3 + mPoints.at(mNumPoints - 1) * b4;
-        // x = px[number_of_points-4]*b1 + px[number_of_points-3]*b2 +
-        //     px[number_of_points-2]*b3 + px[number_of_points-1]*b4;
-        // y = py[number_of_points-4]*b1 + py[number_of_points-3]*b2 +
-        //     py[number_of_points-2]*b3 + py[number_of_points-1]*b4;
-        // std::cout << x << "  " << y << "\n";
         res.push_back(x);
         res.push_back(y);
     }

@@ -58,7 +58,6 @@ class Tetra(object):
         d2 = t.determinant()
         self.circumcenter = Point(d0 / a, d1 / a, d2 / a)
         self.circumradius = (self.circumcenter - v0).length()
-        # print self.circumcenter,self.circumradius
 
     def __getitem__(self, key):
         return self.vertices[key]
@@ -129,7 +128,6 @@ class Delaunay(object):
             v.toList() + [1],
         ]
         d3 = t.determinant()
-        # print(d,d1,d2,d3,d4)
         if d == 0:
             logger.debug("degenerate tetrahedra")
         elif (d > 0 and d0 > 0 and d1 > 0 and d2 > 0 and d3 > 0) or (
@@ -146,7 +144,6 @@ class Delaunay(object):
                 logger.debug("point lies on boundary v0,v1,v3")
             if d3 == 0:
                 logger.debug("point lies on boundary v0,v1,v2")
-        # else: print("point outside")
 
         # If by chance the D0=0, then your tetrahedr is degenerate (the points are coplanar).
         # If any other Di=0, then P lies on boundary i (boundary i being that boundary formed by the three points other than Vi).
@@ -182,11 +179,6 @@ class Delaunay(object):
         for i in self.tetras:
             t = t + " " + str(i)
 
-        # for i in self.tetra_child:
-        #    tc = tc+" "+str(i)
-
-        # for i in self.tetra_parent:
-        #    tp = tp+" "+str(i)
         return (
             "vertex count: "
             + str(len(self.vertices))

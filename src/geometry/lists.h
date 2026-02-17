@@ -9,7 +9,6 @@ namespace Geometry {
 
 template <class T> class List : public std::vector<T> {
   public:
-    // List<T>() {}
     T group_duplicates(List<T> l);
     unsigned int find(T item);
 };

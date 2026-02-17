@@ -13,9 +13,6 @@ std::vector<Vert *> Vert::neighbors() {
         n.push_back(edges[i]->verts[0]);
         n.push_back(edges[i]->verts[1]);
     }
-    // n.group_duplicates();
-    // int f = n.find(v);
-    // n.erase(f);
     return n;
 }
 
