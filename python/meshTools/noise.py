@@ -14,10 +14,12 @@ TABMASK = 0xFF
 
 try:
     from . import _noise
+
     _NoiseCpp = _noise.Noise
 except ImportError:
     try:
         import _noise
+
         _NoiseCpp = _noise.Noise
     except ImportError:
         _NoiseCpp = None
@@ -551,7 +553,9 @@ def _make_noise_class():
             if len(args) == 3:
                 return list(self._impl.vsnoise(args[0], args[1], args[2]))
             if len(args) == 4:
-                return list(self._impl.vsnoise(args[0], args[1], args[2], args[3]))
+                return list(
+                    self._impl.vsnoise(args[0], args[1], args[2], args[3])
+                )
             raise TypeError("vsnoise takes 1, 2, 3, or 4 arguments")
 
         def fBm(self, x, y, z, octaves, lacunarity, gain):
@@ -564,7 +568,9 @@ def _make_noise_class():
             return list(self._impl.vfBm(x, y, z, octaves, lacunarity, gain))
 
         def vturbulence(self, x, y, z, octaves, lacunarity, gain):
-            return list(self._impl.vturbulence(x, y, z, octaves, lacunarity, gain))
+            return list(
+                self._impl.vturbulence(x, y, z, octaves, lacunarity, gain)
+            )
 
     return Noise
 

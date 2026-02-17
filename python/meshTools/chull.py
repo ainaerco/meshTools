@@ -14,10 +14,12 @@ debug = False
 
 try:
     from . import _chull
+
     _CHull = _chull.Hull
 except ImportError:
     try:
         import _chull
+
         _CHull = _chull.Hull
     except ImportError:
         _CHull = None

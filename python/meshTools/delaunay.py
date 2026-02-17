@@ -15,10 +15,12 @@ logger = logging.getLogger(__name__)
 
 try:
     from . import _delaunay
+
     _DelaunayCpp = _delaunay.Delaunay
 except ImportError:
     try:
         import _delaunay
+
         _DelaunayCpp = _delaunay.Delaunay
     except ImportError:
         _DelaunayCpp = None

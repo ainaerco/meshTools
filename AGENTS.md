@@ -86,11 +86,15 @@ C++ formatting is defined for files under `src/` and `bindings/`:
 .\scripts\format.ps1
 ```
 
-Python formatting and lint checks:
+Python formatting and lint:
+
+- To **check** only (same as CI): `uv run ruff format --check .` and `uv run ruff check .`
+- To **fix** formatting: `uv run ruff format .` then run `uv run ruff check .`
 
 ```bash
-uv run ruff format .
+uv run ruff format --check .
 uv run ruff check .
+# If format check fails: uv run ruff format . then re-run checks.
 ```
 
 ## Agent checklist after code changes
@@ -98,5 +102,5 @@ uv run ruff check .
 1. If you changed C++ in `src/` or `bindings/`, run the formatting script.
 2. Ensure the project builds (installable or standalone CMake path).
 3. Run relevant tests (at minimum `uv run pytest tests/ -v`; include `ctest` for C++ changes).
-4. Run Python formatting/lint checks (`uv run ruff format .` and `uv run ruff check .`).
+4. Run Python format/lint: `uv run ruff format --check .` and `uv run ruff check .`; if format check fails, run `uv run ruff format .` and re-check.
 5. Review diffs and confirm generated formatting changes are included in your commit.

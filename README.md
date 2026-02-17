@@ -178,6 +178,17 @@ C++ under `src/` and `bindings/` is formatted with [clang-format](https://clang.
 
 Requires `clang-format` on your PATH.
 
+## Code formatting (Python)
+
+Python is formatted and linted with [ruff](https://docs.astral.sh/ruff/). From the repo root:
+
+```bash
+uv run ruff format --check .    # verify only (CI runs this)
+uv run ruff check .             # lint
+```
+
+To fix formatting: `uv run ruff format .` then re-run the checks.
+
 ## Python API
 
 ### Geometry primitives (`meshTools.geometry`)

@@ -1,0 +1,44 @@
+# Check C++ (clang-format) and Python (ruff) formatting on pull requests.
+name: Format check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Install ruff only (no project build)
+        run: |
+          uv venv
+          uv pip install --python .venv/bin/python ruff
+
+      - name: Install clang-format
+        run: sudo apt-get update && sudo apt-get install -y clang-format
+
+      - name: Check C++ formatting (clang-format)
+        run: |
+          FILES=$(find src bindings -type f \( -name '*.cpp' -o -name '*.h' \) 2>/dev/null || true)
+          if [ -n "$FILES" ]; then
+            echo "$FILES" | xargs clang-format --dry-run --Werror
+          else
+            echo "No C++ sources under src/ or bindings/."
+          fi
+
+      - name: Check Python formatting and lint (ruff)
+        run: |
+          .venv/bin/ruff format --check .
+          .venv/bin/ruff check .
