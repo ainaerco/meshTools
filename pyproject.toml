@@ -18,7 +18,7 @@ maya = []
 # Maya is not on PyPI; use meshTools.maya only when running inside Autodesk Maya.
 
 [tool.scikit-build]
-wheel.packages = ["python/"]
+wheel.packages = ["python/meshTools"]
 
 [tool.ruff]
 line-length = 80
