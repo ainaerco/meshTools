@@ -21,12 +21,12 @@ if "MESHTOOLS_BUILD_DIR" in __import__("os").environ:
 # Where extensions live: install dir (scripts), per-target dirs, or Debug/Release
 _candidates = [
     _build_dir / "scripts",
-    _build_dir / "module" / "Debug",
-    _build_dir / "module" / "Release",
-    _build_dir / "module",
-    _build_dir / "bezierModule" / "Debug",
-    _build_dir / "bezierModule" / "Release",
-    _build_dir / "bezierModule",
+    _build_dir / "bindings" / "geometry_mesh" / "Debug",
+    _build_dir / "bindings" / "geometry_mesh" / "Release",
+    _build_dir / "bindings" / "geometry_mesh",
+    _build_dir / "bindings" / "bezier" / "Debug",
+    _build_dir / "bindings" / "bezier" / "Release",
+    _build_dir / "bindings" / "bezier",
 ]
 for _ext_dir in _candidates:
     if _ext_dir.exists():

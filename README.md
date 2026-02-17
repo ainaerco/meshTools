@@ -22,31 +22,34 @@ meshTools is a collection of geometric algorithms and data structures for 3D mes
 ```
 meshTools/
 ├── CMakeLists.txt          # Top-level CMake build
-├── geometry/               # C++ geometry math (Vector, BBox, List, math utils)
-├── mesh/                   # C++ mesh topology (Vert, Edge, Face, Mesh)
-├── bezier/                 # C++ curve classes (Bezier, Lagrange, Spline)
-├── bezierModule/           # nanobind bindings for bezier curves -> _bezier
-├── module/                 # nanobind bindings for geometry + mesh -> _geometry, _mesh
+├── src/                    # C++ libraries only
+│   ├── geometry/           # Vector, BBox, Ray, Transform, Polygon, math (snake_case filenames)
+│   ├── mesh/               # Mesh topology (Vert, Edge, Face)
+│   └── bezier/             # Bezier, Lagrange, Spline curves
+├── bindings/               # Python extension bindings only
+│   ├── geometry_mesh/      # _geometry, _mesh (nanobind)
+│   └── bezier/             # _bezier (nanobind)
 └── python/
     ├── CMakeLists.txt
-    ├── meshTools/          # Python package
-    │   ├── __init__.py
-    │   ├── geometry.py     # Wraps _geometry C++ module; Vector, BBox, Ray, Transform, ...
-    │   ├── mesh.py         # Pure-Python Mesh class (verts, faces, edges, normals, uvs)
-    │   ├── chull.py        # 3D convex hull (incremental algorithm)
-    │   ├── delaunay.py     # 2D Delaunay triangulation
-    │   ├── triangulate.py  # Ear-clipping polygon triangulation
-    │   ├── noise.py        # Perlin-style noise
-    │   ├── noise_tabs.py   # Noise lookup tables
-    │   └── lists.py        # List/enumeration helpers
-    ├── mesh_maya.py        # MayaMesh — Maya-aware Mesh subclass
-    ├── obb.py              # Oriented bounding box helper for Maya selections
-    ├── mesh_maya_scatter.py# Tile-scatter mesh faces in Maya
-    ├── mesh_maya_tube.py   # Tube mesh generator for Maya
-    ├── tubeDeformer.py     # Tube deformer script
-    ├── convexHull.py       # Standalone convex hull script
-    ├── flowLoop.py         # Flow loop utility
-    └── module_geometry_tests.py  # Geometry module tests
+    └── meshTools/          # Python package
+        ├── __init__.py     # Core API; no Maya dependency
+        ├── geometry.py     # Wraps _geometry; Vector, BBox, Ray, Transform, ...
+        ├── mesh.py         # Pure-Python Mesh class
+        ├── chull.py        # 3D convex hull
+        ├── delaunay.py     # 2D Delaunay triangulation
+        ├── triangulate.py  # Ear-clipping polygon triangulation
+        ├── noise.py        # Perlin-style noise
+        ├── noise_tabs.py   # Noise lookup tables
+        ├── lists.py        # List/enumeration helpers
+        └── maya/           # Optional: use only inside Autodesk Maya
+            ├── __init__.py # Re-exports MayaMesh, kGeotype, MayaTube
+            ├── mesh.py     # MayaMesh — Maya-aware Mesh subclass
+            ├── tube.py     # MayaTube tube mesh generator
+            ├── scatter.py  # Tile-scatter mesh faces
+            ├── obb.py      # Oriented bounding box helper
+            ├── tube_deformer.py
+            ├── convex_hull.py
+            └── flow_loop.py # Flow loop Maya command
 ```
 
 ## Dependencies
@@ -56,7 +59,7 @@ meshTools/
 | CMake >= 3.18 | Build system (nanobind fetched via FetchContent) |
 | Python 3.12+ | Extension modules target Python 3.12 |
 | nanobind | C++/Python bridge (fetched automatically) |
-| Autodesk Maya | Required only for `mesh_maya*.py` and `obb.py` |
+| Autodesk Maya | Required only for the optional `meshTools.maya` subpackage |
 
 ## Building
 
@@ -118,7 +121,7 @@ or, with pytest already installed:
 pytest tests/ -v
 ```
 
-The test suite uses `tests/conftest.py` to add the build output to `sys.path`, so extensions are found from `build/scripts`, `build/module/Debug`, `build/module/Release`, `build/bezierModule/Debug`, or `build/bezierModule/Release`. To use a custom build directory, set the environment variable `MESHTOOLS_BUILD_DIR`.
+The test suite uses `tests/conftest.py` to add the build output to `sys.path`, so extensions are found from `build/scripts`, `build/bindings/geometry_mesh`, or `build/bindings/bezier`. To use a custom build directory, set the environment variable `MESHTOOLS_BUILD_DIR`.
 
 | Test module | Coverage |
 |---|---|
@@ -184,16 +187,17 @@ b = Bezier([0.0, 0.5, 1.0])
 interpolated = b.interpolate(100)   # 100 evenly-spaced samples
 ```
 
-### Maya integration
+### Maya integration (optional)
+
+The `meshTools.maya` subpackage is for use only inside Autodesk Maya. The core `meshTools` package has no Maya dependency.
 
 ```python
 # Inside a Maya Python session
-import meshTools.mesh as mesh
-from mesh_maya import MayaMesh
+from meshTools.maya import MayaMesh  # or: from meshTools.maya.mesh import MayaMesh
 import maya.OpenMaya as OpenMaya
 
 dag = ...  # MDagPath to a mesh
-m = MayaMesh(dag=dag, vertices=True, faces=True, normals=True)
+m = MayaMesh(dag=dag, vertices=1, faces=1, normals=1)
 ```
 
 ## Math utilities (`_geometry` C++ module)

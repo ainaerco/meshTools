@@ -1,5 +1,5 @@
 import maya.OpenMaya as OpenMaya
-from mesh_maya import MayaMesh
+from meshTools.maya import MayaMesh
 from meshTools.geometry import Vector, Polygon
 
 selectionList = OpenMaya.MSelectionList()

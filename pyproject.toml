@@ -13,6 +13,10 @@ dependencies = [
     "ruff>=0.15.1",
 ]
 
+[project.optional-dependencies]
+maya = []
+# Maya is not on PyPI; use meshTools.maya only when running inside Autodesk Maya.
+
 [tool.scikit-build]
 wheel.packages = ["python/"]
 

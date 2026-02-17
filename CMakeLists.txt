@@ -41,14 +41,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 include_directories(${Python_INCLUDE_DIRS})
 
-set(SUBDIRECTORIES
-  bezier
-  bezierModule
-  geometry
-  mesh
-  module
-  python
-)
-foreach(SUBDIR ${SUBDIRECTORIES})
-  add_subdirectory(${SUBDIR})
-endforeach()
+add_subdirectory(src)
+add_subdirectory(bindings)
+add_subdirectory(python)
