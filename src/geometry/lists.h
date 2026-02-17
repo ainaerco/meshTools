@@ -1,6 +1,7 @@
 #ifndef _MESHTOOLS_LIST_H
 #define _MESHTOOLS_LIST_H
 
+#include <algorithm>
 #include <vector>
 
 namespace meshTools {
