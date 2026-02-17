@@ -22,11 +22,11 @@ template <class T, class B> static T getitem(const B &v, size_t index) {
 }
 
 // Expose Bbox::axis (Vector[3]) as a std::vector for Python indexing
-static std::vector<Vector> bbox_axis(const Bbox &b) {
+static std::vector<Vector> bboxAxis(const Bbox &b) {
     return {b.axis[0], b.axis[1], b.axis[2]};
 }
 
-void export_geometry_module(nb::module_ &m) {
+void exportGeometryModule(nb::module_ &m) {
     // Math functions
     m.def("epsilonTest", &math::epsilonTest, "value"_a, "test"_a = 0.0f,
           "eps"_a = 0.000001f, "Floating-point equality test");
@@ -105,7 +105,7 @@ void export_geometry_module(nb::module_ &m) {
         .def("obbFromPointSet", &Bbox::obbFromPointSet)
         .def("calcCenter", &Bbox::calcCenter)
         .def("__getitem__", &getitem<Vector, Bbox>)
-        .def_prop_ro("axis", &bbox_axis)
+        .def_prop_ro("axis", &bboxAxis)
         .def_prop_ro("min", [](const Bbox &b) { return b.min; })
         .def_prop_ro("max", [](const Bbox &b) { return b.max; })
         .def_prop_ro("center", [](const Bbox &b) { return b.center; });
@@ -157,4 +157,4 @@ void export_geometry_module(nb::module_ &m) {
 } // namespace Geometry
 } // namespace meshTools
 
-NB_MODULE(_geometry, m) { meshTools::Geometry::export_geometry_module(m); }
+NB_MODULE(_geometry, m) { meshTools::Geometry::exportGeometryModule(m); }

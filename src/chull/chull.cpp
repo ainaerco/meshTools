@@ -26,18 +26,18 @@ bool collinearImpl(const Geometry::Vector &a, const Geometry::Vector &b,
 }
 
 void faceMakeCcw(ChullFace *f, ChullEdge *e, ChullVertex *p) {
-    const ChullFace *fv = (e->adjface[0] && e->adjface[0]->visible)
-                              ? e->adjface[0]
-                              : e->adjface[1];
+    const ChullFace *fv = (e->adjFace[0] && e->adjFace[0]->visible)
+                              ? e->adjFace[0]
+                              : e->adjFace[1];
     size_t i = 0;
-    while (fv->vertex[i] != e->endpts[0])
+    while (fv->vertex[i] != e->endPts[0])
         ++i;
-    if (fv->vertex[(i + 1) % 3] != e->endpts[1]) {
-        f->vertex[0] = e->endpts[1];
-        f->vertex[1] = e->endpts[0];
+    if (fv->vertex[(i + 1) % 3] != e->endPts[1]) {
+        f->vertex[0] = e->endPts[1];
+        f->vertex[1] = e->endPts[0];
     } else {
-        f->vertex[0] = e->endpts[0];
-        f->vertex[1] = e->endpts[1];
+        f->vertex[0] = e->endPts[0];
+        f->vertex[1] = e->endPts[1];
         std::swap(f->edge[1], f->edge[2]);
     }
     f->vertex[2] = p;
@@ -83,51 +83,56 @@ size_t Hull::doubleTriangle() {
     vertices_[v1]->mark = true;
     vertices_[v2]->mark = true;
 
-    ChullFace *f0 = new ChullFace();
-    f0->vertex[0] = vertices_[v0].get();
-    f0->vertex[1] = vertices_[v1].get();
-    f0->vertex[2] = vertices_[v2].get();
-    faces_.emplace_back(f0);
+    auto f0 = std::make_unique<ChullFace>();
+    ChullFace *pf0 = f0.get();
+    pf0->vertex[0] = vertices_[v0].get();
+    pf0->vertex[1] = vertices_[v1].get();
+    pf0->vertex[2] = vertices_[v2].get();
 
-    ChullEdge *e0 = new ChullEdge();
-    ChullEdge *e1 = new ChullEdge();
-    ChullEdge *e2 = new ChullEdge();
-    e0->endpts[0] = vertices_[v0].get();
-    e0->endpts[1] = vertices_[v1].get();
-    e1->endpts[0] = vertices_[v1].get();
-    e1->endpts[1] = vertices_[v2].get();
-    e2->endpts[0] = vertices_[v2].get();
-    e2->endpts[1] = vertices_[v0].get();
-    e0->adjface[0] = f0;
-    e1->adjface[0] = f0;
-    e2->adjface[0] = f0;
-    f0->edge[0] = e0;
-    f0->edge[1] = e1;
-    f0->edge[2] = e2;
-    edges_.emplace_back(e0);
-    edges_.emplace_back(e1);
-    edges_.emplace_back(e2);
+    auto e0 = std::make_unique<ChullEdge>();
+    auto e1 = std::make_unique<ChullEdge>();
+    auto e2 = std::make_unique<ChullEdge>();
+    ChullEdge *pe0 = e0.get();
+    ChullEdge *pe1 = e1.get();
+    ChullEdge *pe2 = e2.get();
+    pe0->endPts[0] = vertices_[v0].get();
+    pe0->endPts[1] = vertices_[v1].get();
+    pe1->endPts[0] = vertices_[v1].get();
+    pe1->endPts[1] = vertices_[v2].get();
+    pe2->endPts[0] = vertices_[v2].get();
+    pe2->endPts[1] = vertices_[v0].get();
+    pe0->adjFace[0] = pf0;
+    pe1->adjFace[0] = pf0;
+    pe2->adjFace[0] = pf0;
+    pf0->edge[0] = pe0;
+    pf0->edge[1] = pe1;
+    pf0->edge[2] = pe2;
+    faces_.emplace_back(std::move(f0));
+    edges_.emplace_back(std::move(e0));
+    edges_.emplace_back(std::move(e1));
+    edges_.emplace_back(std::move(e2));
 
-    ChullFace *f1 = new ChullFace();
-    f1->vertex[0] = vertices_[v2].get();
-    f1->vertex[1] = vertices_[v1].get();
-    f1->vertex[2] = vertices_[v0].get();
-    f1->edge[0] = e2;
-    f1->edge[1] = e1;
-    f1->edge[2] = e0;
-    faces_.emplace_back(f1);
-    e0->adjface[1] = f1;
-    e1->adjface[1] = f1;
-    e2->adjface[1] = f1;
+    auto f1 = std::make_unique<ChullFace>();
+    ChullFace *pf1 = f1.get();
+    pf1->vertex[0] = vertices_[v2].get();
+    pf1->vertex[1] = vertices_[v1].get();
+    pf1->vertex[2] = vertices_[v0].get();
+    pf1->edge[0] = pe2;
+    pf1->edge[1] = pe1;
+    pf1->edge[2] = pe0;
+    faces_.emplace_back(std::move(f1));
+    pe0->adjFace[1] = pf1;
+    pe1->adjFace[1] = pf1;
+    pe2->adjFace[1] = pf1;
 
     size_t v3 = (v2 + 1) % nv;
-    int vol = volumeSign(f0, vertices_[v3].get());
+    int vol = volumeSign(pf0, vertices_[v3].get());
     while (vol == 0) {
         v3 = (v3 + 1) % nv;
         if (v3 == 0)
             throw std::runtime_error(
                 "DoubleTriangle: All points are coplanar!");
-        vol = volumeSign(f0, vertices_[v3].get());
+        vol = volumeSign(pf0, vertices_[v3].get());
     }
 
     return v3;
@@ -152,13 +157,13 @@ void Hull::edgeOrderOnFaces() {
             ChullEdge *ei = f->edge[i];
             ChullVertex *vi = f->vertex[i];
             ChullVertex *vi1 = f->vertex[(i + 1) % 3];
-            bool ok = (ei->endpts[0] == vi && ei->endpts[1] == vi1) ||
-                      (ei->endpts[1] == vi && ei->endpts[0] == vi1);
+            bool ok = (ei->endPts[0] == vi && ei->endPts[1] == vi1) ||
+                      (ei->endPts[1] == vi && ei->endPts[0] == vi1);
             if (!ok) {
                 for (int j = 0; j < 3; ++j) {
                     ChullEdge *ej = f->edge[j];
-                    if ((ej->endpts[0] == vi && ej->endpts[1] == vi1) ||
-                        (ej->endpts[1] == vi && ej->endpts[0] == vi1)) {
+                    if ((ej->endPts[0] == vi && ej->endPts[1] == vi1) ||
+                        (ej->endPts[1] == vi && ej->endPts[0] == vi1)) {
                         std::swap(f->edge[i], f->edge[j]);
                         break;
                     }
@@ -178,43 +183,45 @@ void Hull::addOne(ChullVertex *p) {
         }
     }
     if (!vis) {
-        p->onhull = false;
+        p->onHull = false;
         return;
     }
     for (auto &e : edges_) {
-        if (e->adjface[0]->visible && e->adjface[1]->visible)
+        if (e->adjFace[0] && e->adjFace[1] && e->adjFace[0]->visible &&
+            e->adjFace[1]->visible)
             e->remove = true;
-        else if (e->adjface[0]->visible || e->adjface[1]->visible)
-            e->newface = makeConeFace(e.get(), p);
+        else if ((e->adjFace[0] && e->adjFace[0]->visible) ||
+                 (e->adjFace[1] && e->adjFace[1]->visible))
+            e->newFace = makeConeFace(e.get(), p);
     }
 }
 
 ChullFace *Hull::makeConeFace(ChullEdge *e, ChullVertex *p) {
-    ChullEdge *new_edge[2] = {nullptr, nullptr};
+    ChullEdge *newEdge[2] = {nullptr, nullptr};
     for (int i = 0; i < 2; ++i) {
-        ChullEdge *d = e->endpts[i]->duplicate;
+        ChullEdge *d = e->endPts[i]->duplicate;
         if (!d) {
             auto ne = std::make_unique<ChullEdge>();
-            ne->endpts[0] = e->endpts[i];
-            ne->endpts[1] = p;
-            e->endpts[i]->duplicate = ne.get();
-            new_edge[i] = ne.get();
+            ne->endPts[0] = e->endPts[i];
+            ne->endPts[1] = p;
+            e->endPts[i]->duplicate = ne.get();
+            newEdge[i] = ne.get();
             edges_.push_back(std::move(ne));
         } else {
-            new_edge[i] = d;
+            newEdge[i] = d;
         }
     }
-    auto new_face = std::make_unique<ChullFace>();
-    new_face->edge[0] = e;
-    new_face->edge[1] = new_edge[0];
-    new_face->edge[2] = new_edge[1];
-    faceMakeCcw(new_face.get(), e, p);
-    ChullFace *fp = new_face.get();
-    faces_.push_back(std::move(new_face));
+    auto newFace = std::make_unique<ChullFace>();
+    newFace->edge[0] = e;
+    newFace->edge[1] = newEdge[0];
+    newFace->edge[2] = newEdge[1];
+    faceMakeCcw(newFace.get(), e, p);
+    ChullFace *fp = newFace.get();
+    faces_.push_back(std::move(newFace));
     for (int i = 0; i < 2; ++i) {
         for (int j = 0; j < 2; ++j) {
-            if (!new_edge[i]->adjface[j]) {
-                new_edge[i]->adjface[j] = fp;
+            if (!newEdge[i]->adjFace[j]) {
+                newEdge[i]->adjFace[j] = fp;
                 break;
             }
         }
@@ -230,12 +237,12 @@ std::pair<size_t, size_t> Hull::cleanUp(size_t ev, size_t v) {
 
 void Hull::cleanEdges() {
     for (auto &e : edges_) {
-        if (e->newface) {
-            if (e->adjface[0]->visible)
-                e->adjface[0] = e->newface;
-            else
-                e->adjface[1] = e->newface;
-            e->newface = nullptr;
+        if (e->newFace) {
+            if (e->adjFace[0] && e->adjFace[0]->visible)
+                e->adjFace[0] = e->newFace;
+            else if (e->adjFace[1])
+                e->adjFace[1] = e->newFace;
+            e->newFace = nullptr;
         }
     }
     edges_.erase(std::remove_if(edges_.begin(), edges_.end(),
@@ -255,13 +262,13 @@ void Hull::cleanFaces() {
 
 std::pair<size_t, size_t> Hull::cleanVertices(size_t evi, size_t vi) {
     for (auto &e : edges_) {
-        e->endpts[0]->onhull = true;
-        e->endpts[1]->onhull = true;
+        e->endPts[0]->onHull = true;
+        e->endPts[1]->onHull = true;
     }
     int viInt = static_cast<int>(vi);
     for (size_t i = 0; i < vertices_.size();) {
         ChullVertex *v = vertices_[i].get();
-        if (v->mark && !v->onhull) {
+        if (v->mark && !v->onHull) {
             vertices_.erase(vertices_.begin() + static_cast<ptrdiff_t>(i));
             if (i < evi)
                 --evi;
@@ -272,7 +279,7 @@ std::pair<size_t, size_t> Hull::cleanVertices(size_t evi, size_t vi) {
     }
     for (auto &v : vertices_) {
         v->duplicate = nullptr;
-        v->onhull = false;
+        v->onHull = false;
     }
     size_t nv = vertices_.size();
     if (nv == 0)
@@ -297,29 +304,33 @@ Hull::Hull(const std::vector<Geometry::Vector> &points) {
                       vertices_[2].get()))
             throw std::runtime_error(
                 "DoubleTriangle: All points are collinear!");
-        ChullFace *f0 = new ChullFace();
-        f0->vertex[0] = vertices_[0].get();
-        f0->vertex[1] = vertices_[1].get();
-        f0->vertex[2] = vertices_[2].get();
-        ChullEdge *e0 = new ChullEdge();
-        ChullEdge *e1 = new ChullEdge();
-        ChullEdge *e2 = new ChullEdge();
-        e0->endpts[0] = vertices_[0].get();
-        e0->endpts[1] = vertices_[1].get();
-        e1->endpts[0] = vertices_[1].get();
-        e1->endpts[1] = vertices_[2].get();
-        e2->endpts[0] = vertices_[2].get();
-        e2->endpts[1] = vertices_[0].get();
-        e0->adjface[0] = f0;
-        e1->adjface[0] = f0;
-        e2->adjface[0] = f0;
-        f0->edge[0] = e0;
-        f0->edge[1] = e1;
-        f0->edge[2] = e2;
-        edges_.emplace_back(e0);
-        edges_.emplace_back(e1);
-        edges_.emplace_back(e2);
-        faces_.emplace_back(f0);
+        auto f0 = std::make_unique<ChullFace>();
+        ChullFace *pf0 = f0.get();
+        pf0->vertex[0] = vertices_[0].get();
+        pf0->vertex[1] = vertices_[1].get();
+        pf0->vertex[2] = vertices_[2].get();
+        auto e0 = std::make_unique<ChullEdge>();
+        auto e1 = std::make_unique<ChullEdge>();
+        auto e2 = std::make_unique<ChullEdge>();
+        ChullEdge *pe0 = e0.get();
+        ChullEdge *pe1 = e1.get();
+        ChullEdge *pe2 = e2.get();
+        pe0->endPts[0] = vertices_[0].get();
+        pe0->endPts[1] = vertices_[1].get();
+        pe1->endPts[0] = vertices_[1].get();
+        pe1->endPts[1] = vertices_[2].get();
+        pe2->endPts[0] = vertices_[2].get();
+        pe2->endPts[1] = vertices_[0].get();
+        pe0->adjFace[0] = pf0;
+        pe1->adjFace[0] = pf0;
+        pe2->adjFace[0] = pf0;
+        pf0->edge[0] = pe0;
+        pf0->edge[1] = pe1;
+        pf0->edge[2] = pe2;
+        edges_.emplace_back(std::move(e0));
+        edges_.emplace_back(std::move(e1));
+        edges_.emplace_back(std::move(e2));
+        faces_.emplace_back(std::move(f0));
         edgeOrderOnFaces();
         return;
     }

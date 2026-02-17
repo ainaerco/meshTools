@@ -9,7 +9,7 @@ using namespace nb::literals;
 namespace meshTools {
 namespace Delaunay {
 
-void export_delaunay_module(nb::module_ &m) {
+void exportDelaunayModule(nb::module_ &m) {
     nb::class_<Delaunay>(m, "Delaunay",
                          "3D Delaunay tetrahedralization built incrementally "
                          "from a point set.")
@@ -56,4 +56,4 @@ void export_delaunay_module(nb::module_ &m) {
 } // namespace Delaunay
 } // namespace meshTools
 
-NB_MODULE(_delaunay, m) { meshTools::Delaunay::export_delaunay_module(m); }
+NB_MODULE(_delaunay, m) { meshTools::Delaunay::exportDelaunayModule(m); }

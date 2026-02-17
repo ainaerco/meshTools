@@ -73,17 +73,17 @@ Transform Transform::lookAt(const Vector &pos, const Vector &look,
     Transform t;
     const Vector dir = look - pos;
     const Vector left = dir.cross(up).normalize();
-    const Vector newup = dir.cross(left).normalize();
+    const Vector newUp = dir.cross(left).normalize();
     t.m[0][0] = left.x;
-    t.m[0][1] = newup.x;
+    t.m[0][1] = newUp.x;
     t.m[0][2] = dir.x;
     t.m[0][3] = pos.x;
     t.m[1][0] = left.y;
-    t.m[1][1] = newup.y;
+    t.m[1][1] = newUp.y;
     t.m[1][2] = dir.y;
     t.m[1][3] = pos.y;
     t.m[2][0] = left.z;
-    t.m[2][1] = newup.z;
+    t.m[2][1] = newUp.z;
     t.m[2][2] = dir.z;
     t.m[2][3] = pos.z;
     t.m[3][0] = 0;
@@ -211,19 +211,19 @@ Transform Transform::scaleLocal(float factor, const Vector &origin,
 
 Transform Transform::rotateX(float angle) const {
     Transform t;
-    const float sin_t = sin(angle);
-    const float cos_t = cos(angle);
+    const float sinT = sin(angle);
+    const float cosT = cos(angle);
     t.m[0][0] = 1;
     t.m[0][1] = 0;
     t.m[0][2] = 0;
     t.m[0][3] = 0;
     t.m[1][0] = 0;
-    t.m[1][1] = cos_t;
-    t.m[1][2] = -sin_t;
+    t.m[1][1] = cosT;
+    t.m[1][2] = -sinT;
     t.m[1][3] = 0;
     t.m[2][0] = 0;
-    t.m[2][1] = sin_t;
-    t.m[2][2] = cos_t;
+    t.m[2][1] = sinT;
+    t.m[2][2] = cosT;
     t.m[2][3] = 0;
     t.m[3][0] = 0;
     t.m[3][1] = 0;
@@ -234,19 +234,19 @@ Transform Transform::rotateX(float angle) const {
 
 Transform Transform::rotateY(float angle) const {
     Transform t;
-    const float sin_t = sin(angle);
-    const float cos_t = cos(angle);
-    t.m[0][0] = cos_t;
+    const float sinT = sin(angle);
+    const float cosT = cos(angle);
+    t.m[0][0] = cosT;
     t.m[0][1] = 0;
-    t.m[0][2] = sin_t;
+    t.m[0][2] = sinT;
     t.m[0][3] = 0;
     t.m[1][0] = 0;
     t.m[1][1] = 1;
     t.m[1][2] = 0;
     t.m[1][3] = 0;
-    t.m[2][0] = -sin_t;
+    t.m[2][0] = -sinT;
     t.m[2][1] = 0;
-    t.m[2][2] = cos_t;
+    t.m[2][2] = cosT;
     t.m[2][3] = 0;
     t.m[3][0] = 0;
     t.m[3][1] = 0;
@@ -257,14 +257,14 @@ Transform Transform::rotateY(float angle) const {
 
 Transform Transform::rotateZ(float angle) const {
     Transform t;
-    const float sin_t = sin(angle);
-    const float cos_t = cos(angle);
-    t.m[0][0] = cos_t;
-    t.m[0][1] = -sin_t;
+    const float sinT = sin(angle);
+    const float cosT = cos(angle);
+    t.m[0][0] = cosT;
+    t.m[0][1] = -sinT;
     t.m[0][2] = 0;
     t.m[0][3] = 0;
-    t.m[1][0] = sin_t;
-    t.m[1][1] = cos_t;
+    t.m[1][0] = sinT;
+    t.m[1][1] = cosT;
     t.m[1][2] = 0;
     t.m[1][3] = 0;
     t.m[2][0] = 0;

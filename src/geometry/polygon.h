@@ -36,10 +36,10 @@ class Polygon {
     std::vector<int> triangulate() const;
 
   private:
-    std::vector<Vector> m_points; ///< Vertex points of the polygon
-    std::vector<int> m_indices;   ///< Vertex indices
-    Vector m_normal;              ///< Normal vector of the polygon
-    size_t m_size;                ///< Number of vertices in the polygon
+    std::vector<Vector> mPoints; ///< Vertex points of the polygon
+    std::vector<int> mIndices;   ///< Vertex indices
+    Vector mNormal;              ///< Normal vector of the polygon
+    size_t mSize;                ///< Number of vertices in the polygon
 };
 
 } // namespace Geometry

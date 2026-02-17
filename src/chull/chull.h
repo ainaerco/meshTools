@@ -21,14 +21,14 @@ struct ChullVertex {
     Geometry::Vector v;
     int vnum = 0;
     ChullEdge *duplicate = nullptr;
-    bool onhull = false;
+    bool onHull = false;
     bool mark = false;
 };
 
 struct ChullEdge {
-    ChullFace *adjface[2] = {nullptr, nullptr};
-    ChullVertex *endpts[2] = {nullptr, nullptr};
-    ChullFace *newface = nullptr;
+    ChullFace *adjFace[2] = {nullptr, nullptr};
+    ChullVertex *endPts[2] = {nullptr, nullptr};
+    ChullFace *newFace = nullptr;
     bool remove = false;
 };
 

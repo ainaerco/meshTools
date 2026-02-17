@@ -7,7 +7,7 @@ using namespace nb::literals;
 namespace meshTools {
 namespace Noise {
 
-void export_noise_module(nb::module_ &m) {
+void exportNoiseModule(nb::module_ &m) {
     nb::class_<Noise>(m, "Noise",
                       "Procedural Simplex-style noise generator (2D, 3D, 4D).")
         .def(nb::init<>())
@@ -89,4 +89,4 @@ void export_noise_module(nb::module_ &m) {
 } // namespace Noise
 } // namespace meshTools
 
-NB_MODULE(_noise, m) { meshTools::Noise::export_noise_module(m); }
+NB_MODULE(_noise, m) { meshTools::Noise::exportNoiseModule(m); }

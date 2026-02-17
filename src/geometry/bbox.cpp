@@ -12,37 +12,37 @@ namespace meshTools {
 namespace Geometry {
 
 void Bbox::fromPointSet(const std::vector<Vector> &pointset) {
-    std::vector<Vector> sorted_pointset;
-    sorted_pointset = sortedVectorArray(pointset, 0);
-    min.x = sorted_pointset.front().x;
-    max.x = sorted_pointset.back().x;
-    sorted_pointset = sortedVectorArray(pointset, 1);
-    min.y = sorted_pointset.front().y;
-    max.y = sorted_pointset.back().y;
-    sorted_pointset = sortedVectorArray(pointset, 2);
-    min.z = sorted_pointset.front().z;
-    max.z = sorted_pointset.back().z;
+    std::vector<Vector> sortedPointset;
+    sortedPointset = sortedVectorArray(pointset, 0);
+    min.x = sortedPointset.front().x;
+    max.x = sortedPointset.back().x;
+    sortedPointset = sortedVectorArray(pointset, 1);
+    min.y = sortedPointset.front().y;
+    max.y = sortedPointset.back().y;
+    sortedPointset = sortedVectorArray(pointset, 2);
+    min.z = sortedPointset.front().z;
+    max.z = sortedPointset.back().z;
     calcCenter();
 }
-void swap(float first[3], float second[3]) { std::swap(first, second); }
+
 void Bbox::obbFromPointSet(const std::vector<Vector> &pointset) {
     Vector means;
-    const size_t pointset_size = pointset.size();
-    for (size_t i = 0; i < pointset_size; i++) {
+    const size_t pointsetSize = pointset.size();
+    for (size_t i = 0; i < pointsetSize; i++) {
         means += pointset[i];
     }
-    means /= static_cast<float>(pointset_size);
+    means /= static_cast<float>(pointsetSize);
     float m[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
     float mc[3][3];
     float factor;
     m[2][2] = 1;
     for (int x = 0; x < 3; x++)
         for (int y = 0; y < 3; y++) {
-            for (int i = 0; i < pointset_size; i++) {
+            for (int i = 0; i < pointsetSize; i++) {
                 m[x][y] +=
                     (means[x] - pointset[i][x]) * (means[y] - pointset[i][y]);
             }
-            m[x][y] /= pointset_size;
+            m[x][y] /= pointsetSize;
         }
     float a, b, c, d;
     a = -1;
@@ -60,7 +60,7 @@ void Bbox::obbFromPointSet(const std::vector<Vector> &pointset) {
         mc[2][2] -= roots[i];
 
         if (mc[0][0] == 0) {
-            swap(mc[0], mc[2]);
+            std::swap(mc[0], mc[2]);
         } else {
             factor = mc[2][0] / mc[0][0];
             mc[2][0] += -mc[0][0] * factor;
@@ -69,7 +69,7 @@ void Bbox::obbFromPointSet(const std::vector<Vector> &pointset) {
         }
 
         if (mc[0][0] == 0) {
-            swap(mc[0], mc[1]);
+            std::swap(mc[0], mc[1]);
         } else {
             factor = mc[1][0] / mc[0][0];
             mc[1][0] += -mc[0][0] * factor;
@@ -78,7 +78,7 @@ void Bbox::obbFromPointSet(const std::vector<Vector> &pointset) {
         }
 
         if (mc[1][1] == 0) {
-            swap(mc[1], mc[2]);
+            std::swap(mc[1], mc[2]);
         } else {
             factor = mc[2][1] / mc[1][1];
             mc[2][0] += -mc[1][0] * factor;
@@ -92,7 +92,7 @@ void Bbox::obbFromPointSet(const std::vector<Vector> &pointset) {
 
     min = Vector(0, 0, 0);
     max = Vector(0, 0, 0);
-    for (size_t i = 0; i < pointset_size; i++) {
+    for (size_t i = 0; i < pointsetSize; i++) {
 
         const Vector &v =
             Vector(axis[0].dot(pointset[i]), axis[1].dot(pointset[i]),

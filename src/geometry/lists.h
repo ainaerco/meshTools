@@ -23,7 +23,7 @@ template <class T> class List : public std::vector<T> {
      * @param l The list to compare with
      * @return Grouped element
      */
-    T group_duplicates(const List<T> &l);
+    T groupDuplicates(const List<T> &l);
 
     /**
      * @brief Find the index of an item in the list
@@ -33,7 +33,7 @@ template <class T> class List : public std::vector<T> {
     unsigned int find(const T &item) const;
 };
 
-template <class T> T List<T>::group_duplicates(const List<T> &l) {}
+template <class T> T List<T>::groupDuplicates(const List<T> &l) {}
 
 template <class T> unsigned int List<T>::find(const T &item) const {
     typename List<T>::iterator h = std::find(this->begin(), this->end(), item);
