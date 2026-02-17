@@ -21,7 +21,6 @@ def tileScatter(
     align_axis=1,
     srandom_rotate=Point(),
     srandom_translate=Point(),
-    srandom_scale=Point(),
     facing_sun=0.0,
 ):
     """copy_type = duplicate instance combine"""

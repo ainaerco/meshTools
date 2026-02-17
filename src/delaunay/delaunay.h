@@ -47,7 +47,7 @@ class Delaunay {
 
     /** Original input vertices (unchanged). */
     const std::vector<Geometry::Vector> &getOrigVertices() const {
-        return orig_vertices_;
+        return origVertices_;
     }
     /** All vertices (bounding + input). */
     const std::vector<Geometry::Vector> &getVertices() const {
@@ -57,7 +57,7 @@ class Delaunay {
     std::vector<std::vector<int>> getTetras() const;
 
   private:
-    std::vector<Geometry::Vector> orig_vertices_;
+    std::vector<Geometry::Vector> origVertices_;
     std::vector<Geometry::Vector> vertices_;
     std::vector<Tetra> tetras_;
 

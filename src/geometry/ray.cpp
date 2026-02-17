@@ -23,41 +23,41 @@ Vector Ray::pointProjection(const Vector &point) const {
 }
 
 Vector Ray::triangleRayHit(const Vector triangle[3]) const {
-    Vector ret, tvec, qvec;
+    Vector ret, tVec, qVec;
     const Vector edge1 = triangle[1] - triangle[0];
     const Vector edge2 = triangle[2] - triangle[0];
-    const Vector pvec = direction.cross(edge2);
+    const Vector pVec = direction.cross(edge2);
     float u, v, t;
-    const float det = edge1.dot(pvec);
+    const float det = edge1.dot(pVec);
     if (det > EPSILON) {
-        tvec = origin - triangle[0];
-        u = tvec.dot(pvec);
+        tVec = origin - triangle[0];
+        u = tVec.dot(pVec);
         if ((u < 0) || (u > det)) {
             return ret;
         }
-        qvec = tvec.cross(edge1);
-        v = direction.dot(qvec);
+        qVec = tVec.cross(edge1);
+        v = direction.dot(qVec);
         if ((v < 0) || (u + v > det)) {
             return ret;
         }
     } else if (det < -EPSILON) {
-        tvec = origin - triangle[0];
-        u = tvec.dot(pvec);
+        tVec = origin - triangle[0];
+        u = tVec.dot(pVec);
         if ((u > 0) || (u < det)) {
             return ret;
         }
-        qvec = tvec.cross(edge1);
-        v = direction.dot(qvec);
+        qVec = tVec.cross(edge1);
+        v = direction.dot(qVec);
         if ((v > 0) || (u + v < det)) {
             return ret;
         }
     } else {
         return ret;
     }
-    const float inv_det = 1 / det;
-    t = edge2.dot(qvec) * inv_det;
-    u = u * inv_det;
-    v = v * inv_det;
+    const float invDet = 1 / det;
+    t = edge2.dot(qVec) * invDet;
+    u = u * invDet;
+    v = v * invDet;
     return Vector(u, v, t);
 }
 

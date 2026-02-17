@@ -9,7 +9,7 @@ using namespace nb::literals;
 namespace meshTools {
 namespace Chull {
 
-void export_chull_module(nb::module_ &m) {
+void exportChullModule(nb::module_ &m) {
     nb::class_<Hull>(m, "Hull",
                      "Convex hull of a 3D point set. Use exportHull() for "
                      "[faces, vertices].")
@@ -38,4 +38,4 @@ void export_chull_module(nb::module_ &m) {
 } // namespace Chull
 } // namespace meshTools
 
-NB_MODULE(_chull, m) { meshTools::Chull::export_chull_module(m); }
+NB_MODULE(_chull, m) { meshTools::Chull::exportChullModule(m); }

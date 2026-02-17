@@ -171,7 +171,7 @@ void Delaunay::pointInTetrahedra(size_t vIndex, size_t tetraIndex) {
 
 Delaunay::Delaunay(const std::vector<Geometry::Vector> &vertices,
                    float maxVal) {
-    orig_vertices_ = vertices;
+    origVertices_ = vertices;
     float k = 3.f * maxVal;
     vertices_.push_back(Geometry::Vector(k, 0.f, 0.f));
     vertices_.push_back(Geometry::Vector(-k, k, 0.f));
@@ -190,7 +190,7 @@ Delaunay::Delaunay(const std::vector<Geometry::Vector> &vertices,
     calculateCircumsphere(t0, vertices_);
     t0.parent = 0;
     tetras_.push_back(t0);
-    for (const auto &vert : orig_vertices_) {
+    for (const auto &vert : origVertices_) {
         vertices_.push_back(vert);
         size_t vi = vertices_.size() - 1;
         pointInTetrahedra(vi, 0);

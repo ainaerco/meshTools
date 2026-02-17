@@ -69,10 +69,10 @@ class Lagrange {
 
     /**
      * @brief Interpolate to generate a desired number of points
-     * @param desired_num Number of interpolated points to generate
+     * @param desiredNum Number of interpolated points to generate
      * @return Vector of interpolated values
      */
-    std::vector<float> interpolate(const size_t &desired_num);
+    std::vector<float> interpolate(const size_t &desiredNum);
 
   private:
     std::vector<float> mPoints; ///< Control points
@@ -102,10 +102,10 @@ class Bezier {
 
     /**
      * @brief Interpolate to generate a desired number of points
-     * @param desired_num Number of interpolated points to generate
+     * @param desiredNum Number of interpolated points to generate
      * @return Vector of interpolated values
      */
-    std::vector<float> interpolate(const size_t &desired_num);
+    std::vector<float> interpolate(const size_t &desiredNum);
 
   private:
     std::vector<float> mPoints; ///< Control points
@@ -134,10 +134,10 @@ class Spline {
 
     /**
      * @brief Interpolate to generate a desired number of points
-     * @param desired_num Number of interpolated points to generate
+     * @param desiredNum Number of interpolated points to generate
      * @return Vector of interpolated values
      */
-    std::vector<float> interpolate(const size_t &desired_num);
+    std::vector<float> interpolate(const size_t &desiredNum);
 
   private:
     std::vector<float> mPoints; ///< Control points
@@ -159,11 +159,11 @@ class Spline1 {
     /**
      * @brief Interpolate control points
      * @param mPoints Vector of control point values
-     * @param desired_num Desired number of samples per segment
+     * @param desiredNum Desired number of samples per segment
      * @return Vector of interpolated values (x,y pairs)
      */
     std::vector<float> interpolate(const std::vector<float> &mPoints,
-                                   const size_t &desired_num);
+                                   const size_t &desiredNum);
 };
 
 } // namespace curves
