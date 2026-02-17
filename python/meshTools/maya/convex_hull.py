@@ -1,6 +1,11 @@
+import logging
 from time import time
+
 import maya.OpenMaya as OpenMaya
+
 from meshTools.maya.mesh import MayaMesh
+
+logger = logging.getLogger(__name__)
 
 
 def perform(**kwargs):
@@ -23,10 +28,10 @@ def perform(**kwargs):
     start_time = time()
     m = MayaMesh(dag=dagPath)
     elapsed_time = time() - start_time
-    print(str(elapsed_time) + " Elapsed on loading to mesh class")
+    logger.info("%s Elapsed on loading to mesh class", elapsed_time)
     start_time = time()
     m.generateConvexHull(pointCount, m.meshFn.numVertices())
     ret = m.meshToMaya(name="low_" + name)
     elapsed_time = time() - start_time
-    print(str(elapsed_time) + " Elapsed")
+    logger.info("%s Elapsed", elapsed_time)
     return ret

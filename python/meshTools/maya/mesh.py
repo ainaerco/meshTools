@@ -1,12 +1,15 @@
+import logging
 import math
+import random
+
+import maya.OpenMaya as OpenMaya
+import maya.cmds as cmds
 
 import meshTools.lists as lists
 from meshTools.geometry import BBox, Point, Transform, Vector, pointInPoly
 from meshTools.mesh import Mesh, kGeotype
 
-import maya.OpenMaya as OpenMaya
-import maya.cmds as cmds
-import random
+logger = logging.getLogger(__name__)
 
 # Set by script when run (see bottom of file)
 selectionPath = None
@@ -25,7 +28,7 @@ class MayaMesh(Mesh):
         elif "mesh" in kwargs:
             self.meshFn = kwargs.get("mesh")
         else:
-            print("Mesh not specified for MayaMesh")
+            logger.warning("Mesh not specified for MayaMesh")
             return
         self.selectionType = kGeotype.face
         if kwargs.get("pivot", 0):
@@ -326,7 +329,7 @@ class MayaMesh(Mesh):
             id = 0
             for j in i:
                 if j > len(self.vertices) - 1:
-                    print("segmentation unknown vertex")
+                    logger.error("segmentation unknown vertex")
                 else:
                     polygonConnects_final.append(j)
                 id = id + 1
@@ -359,7 +362,7 @@ class MayaMesh(Mesh):
             for i in self.face_uvs:
                 for j in i:
                     if j > len(self.uvs) - 1:
-                        print("segmentation unknown uv")
+                        logger.error("segmentation unknown uv")
                     else:
                         uvConnects.append(j)
             meshFS_n.setUVs(uArray, vArray)
@@ -446,7 +449,7 @@ t = MayaTube(curveDag=selectionPath,profileDag = selection1,reverse=0,cylinder_s
 
 #m = MayaMesh(dag = selectionPath,vertices=1,faces=1,edges=1)
 elapsed_time = time() - start_time
-print(str(elapsed_time)+" Elapsed on loading to mesh class")
+logger.info("%s Elapsed on loading to mesh class", elapsed_time)
 #print m
 #m.test()
 #m.meshToMaya(name = 'proxy')

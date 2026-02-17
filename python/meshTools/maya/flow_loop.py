@@ -1,7 +1,12 @@
+import logging
 import sys
+
 import maya.OpenMaya as OpenMaya
 import maya.OpenMayaMPx as OpenMayaMPx
+
 from meshTools.maya.mesh import MayaMesh, kGeotype
+
+logger = logging.getLogger(__name__)
 
 kPluginCmdName = "flowLoop"
 
@@ -13,13 +18,11 @@ class scriptedCommand(OpenMayaMPx.MPxCommand):
 
     # Invoked when the command is run.
     def doIt(self, argList):
-        print("doIt()")
-
+        logger.debug("doIt()")
         self.redoIt()
 
     def redoIt(self):
-
-        print("redoIt()")
+        logger.debug("redoIt()")
         self.dagModifier = OpenMaya.MDagModifier()
         selectionList = OpenMaya.MSelectionList()
         OpenMaya.MGlobal.getActiveSelectionList(selectionList)
@@ -40,11 +43,11 @@ class scriptedCommand(OpenMayaMPx.MPxCommand):
         m.flowLoop(selection)
 
     def undoIt(self):
-        print("undoIt()")
+        logger.debug("undoIt()")
         self.dagModifier.undoIt()
 
     def isUndoable(self):
-        print("isUndoable()")
+        logger.debug("isUndoable()")
         return True
 
 

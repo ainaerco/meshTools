@@ -1,5 +1,9 @@
-from .geometry import Point, Transform, fit
+import logging
 from random import random
+
+from .geometry import Point, Transform, fit
+
+logger = logging.getLogger(__name__)
 
 
 class Tetra(object):
@@ -127,21 +131,21 @@ class Delaunay(object):
         d3 = t.determinant()
         # print(d,d1,d2,d3,d4)
         if d == 0:
-            print("degenerate tetrahedra")
+            logger.debug("degenerate tetrahedra")
         elif (d > 0 and d0 > 0 and d1 > 0 and d2 > 0 and d3 > 0) or (
             d < 0 and d0 < 0 and d1 < 0 and d2 < 0 and d3 < 0
         ):
-            print(len(self.vertices), "point in tetrahedra")
+            logger.debug("%s point in tetrahedra", len(self.vertices))
             self.addTetrahedra(v, tetra, 0)
         else:
             if d0 == 0:
-                print("point lies on boundary v1,v2,v3")
+                logger.debug("point lies on boundary v1,v2,v3")
             if d1 == 0:
-                print("point lies on boundary v0,v2,v3")
+                logger.debug("point lies on boundary v0,v2,v3")
             if d2 == 0:
-                print("point lies on boundary v0,v1,v3")
+                logger.debug("point lies on boundary v0,v1,v3")
             if d3 == 0:
-                print("point lies on boundary v0,v1,v2")
+                logger.debug("point lies on boundary v0,v1,v2")
         # else: print("point outside")
 
         # If by chance the D0=0, then your tetrahedr is degenerate (the points are coplanar).
@@ -198,6 +202,7 @@ class Delaunay(object):
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
     verts = []
     min, max = -10, 10
     for i in range(20):
@@ -210,7 +215,6 @@ if __name__ == "__main__":
             )
         ]
     d = Delaunay(verts, max)
-
-    print(d)
+    logger.info("%s", d)
     # w = d.computeCircumsphere(1)
     # print(w[0],w[1])

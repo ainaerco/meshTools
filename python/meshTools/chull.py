@@ -1,5 +1,8 @@
+import logging
+
 from .geometry import Point, Vector
 
+logger = logging.getLogger(__name__)
 debug = False
 
 
@@ -230,6 +233,7 @@ class Hull:
                             (f.edge[i], f.edge[j]) = (f.edge[j], f.edge[i])
 
     def Print(self):
+        """Output STL-style solid to stdout (for debugging/export)."""
         print("solid points")
         for f in self.faces:
             print(f)
@@ -337,7 +341,7 @@ class Hull:
             vol = self.VolumeSign(f0, self.vertices[v3])
 
         if debug:
-            print(self.debug("initial"))
+            logger.debug("%s", self.debug("initial"))
 
         return v3
 
@@ -391,7 +395,7 @@ class Hull:
                 e.newface = self.MakeConeFace(e, p)
 
         if debug:
-            print(self.debug("addone"))
+            logger.debug("%s", self.debug("addone"))
 
         return True
 
@@ -437,13 +441,13 @@ class Hull:
         """
         de = self.CleanEdges()
         if debug:
-            print(self.debug("cleanedges " + " ".join(de)))
+            logger.debug("%s", self.debug("cleanedges " + " ".join(de)))
         self.CleanFaces()
         if debug:
-            print(self.debug("cleanfaces"))
+            logger.debug("%s", self.debug("cleanfaces"))
         ev, v = self.CleanVertices(ev, v)
         if debug:
-            print(self.debug("cleanvertices"))
+            logger.debug("%s", self.debug("cleanvertices"))
         return ev, v
 
     def CleanEdges(self):
@@ -577,12 +581,13 @@ if __name__ == "__main__":
     for i in range(20):
         cubef.append(Vector(random(), random(), random()))
 
+    logging.basicConfig(level=logging.INFO)
     sphere = []
     for i in range(2000):
         x, y, z = 2 * random() - 1, 2 * random() - 1, 2 * random() - 1
         if x * x + y * y + z * z < 1.0:
             sphere.append(Vector(x, y, z))
     h = Hull(sphere)
-    print(h.exportHull())
+    logger.info("%s", h.exportHull())
     # print(h.debug("endresult"))
     # h.Print()

@@ -340,5 +340,7 @@ class Noise(object):
 
 
 if __name__ == "__main__":
+    import logging
+    logging.basicConfig(level=logging.INFO)
     n = Noise()
-    print(n.snoise(0.2, 0.2, 0.1, 0.8))
+    logging.info("%s", n.snoise(0.2, 0.2, 0.1, 0.8))

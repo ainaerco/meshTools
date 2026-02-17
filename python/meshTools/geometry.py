@@ -120,22 +120,16 @@ if __name__ == "__main__":
 
     # print we.axis
     t = Transform(we.axis[0], we.axis[1], we.axis[2])
-    print("T", t)
     z = Transform()
     z = z * t
-    print(z)
     z = Transform()
     z = t
-    print("Z", z, t)
     # z = t.getEuler()
     v1 = Vector(0, 0, 1)
     v2 = Vector(0, 1, 0)
     v3 = Vector(1, 0, 0)
     v1 += v2
-    print(v1)
     v1 -= v2
-    print(v1 != Vector(0, 0, 1))
-    print(v1)
     # print degrees(z[0]),degrees(z[1]),degrees(z[2])
 
     # print we.max[0]-we.min[0]

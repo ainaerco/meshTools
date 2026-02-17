@@ -1,5 +1,6 @@
-import random
+import logging
 import math  # degrees,tan,pi,sin,cos,modf
+import random
 from copy import copy
 from time import time
 
@@ -27,10 +28,12 @@ VERBOSE = 1
 kGeotype = lists.Enumeration("face|edge|vertex")
 kResult = lists.Enumeration("updateVertex|updateMesh|updateSelection")
 
+logger = logging.getLogger(__name__)
+
 
 def printv(*args):
     if VERBOSE >= args[-1]:
-        print(args[:-1])
+        logger.debug("%s", args[:-1])
 
 
 class Mesh(object):
@@ -812,7 +815,7 @@ class Mesh(object):
         self.normals = new_normals
 
         start_time = time() - start_time
-        print(str(start_time) + " __deleteNormals Elapsed")
+        logger.debug("%s __deleteNormals Elapsed", start_time)
 
     def __deleteFaces(self, faces):
         if len(faces) > 0:
@@ -824,7 +827,7 @@ class Mesh(object):
             new_faces += self.faces[faces[-1] + 1 :]
             self.faces = new_faces
             start_time = time() - start_time
-            print(str(start_time) + " __deleteFaces Elapsed")
+            logger.debug("%s __deleteFaces Elapsed", start_time)
 
             self.__deleteNormals(faces)
 
@@ -882,7 +885,7 @@ class Mesh(object):
             for vert in self.faces[i]:
                 self.vertices[vert].parent_faces += [i]
         start_time = time() - start_time
-        print(str(start_time) + " rebuildVertP Elapsed")
+        logger.debug("%s rebuildVertP Elapsed", start_time)
 
     def __connectFace(self, sel_face, first, second, connections):
         # first and second are ids | corner not implemented
@@ -1065,7 +1068,7 @@ class Mesh(object):
         # addSphere(d.tetras[0].circumcenter,d.tetras[0].circumradius)
         self.addFace(lists.enumerate_list(self.vertices))
 
-        print(self)
+        logger.debug("%s", self)
 
     def detach(self, selection, **kwargs):
         selection_type = kwargs.get("selection_type", self.selectionType)
@@ -1540,7 +1543,7 @@ class Mesh(object):
                 ),
             )
         start_time = time() - start_time
-        print(str(start_time) + " noise Elapsed")
+        logger.debug("%s noise Elapsed", start_time)
         return [kResult.updateVertex]
 
     def push(self, selection, **kwargs):
@@ -1965,7 +1968,7 @@ class Mesh(object):
         )
         self.faces.extend(new_faces)
         self.faces.pop(face)
-        print(self)
+        logger.debug("%s", self)
 
     def quadChamfer1(self, sel_edges, chamfer_size):
         edges = self.edges
@@ -1980,9 +1983,8 @@ class Mesh(object):
         faces_terminate = lists.remove_duplicates(
             faces_terminate, faces_involved
         )
-        print("faces_terminate ", faces_terminate)
-        print("faces_involved ", faces_involved)
-        print("vertices_involved ", vertices_involved)
+        logger.debug("faces_terminate %s faces_involved %s vertices_involved %s",
+                     faces_terminate, faces_involved, vertices_involved)
         chamfer_data = []
 
         for face in faces_involved:
@@ -2048,8 +2050,7 @@ class Mesh(object):
         # sel = lists.find(self.faces[face],vertices_involved[])
         # print sel
 
-        print("chamfer_data ", chamfer_data)
-        print(edges)
+        logger.debug("chamfer_data %s edges %s", chamfer_data, edges)
         for chamfer_element in chamfer_data:
             if len(chamfer_element) > 3:
                 self.faces.append(chamfer_element[1:])
@@ -2059,13 +2060,11 @@ class Mesh(object):
                     repl_id = lists.find(self.faces[face_t], chamfer_element[0])
 
                     if repl_id != -1:
-                        print(repl_id)
-                        print(
-                            self.faces[face_t],
-                            self.faces[face_t][: repl_id - 1]
-                            + chamfer_element[1:]
-                            + self.faces[face_t][repl_id + 1 :],
-                        )
+                        logger.debug("repl_id %s face_t %s", repl_id,
+                                     (self.faces[face_t],
+                                      self.faces[face_t][: repl_id - 1]
+                                      + chamfer_element[1:]
+                                      + self.faces[face_t][repl_id + 1 :]))
 
                         self.faces[face_t] = (
                             self.faces[face_t][: repl_id - 1]
@@ -2413,7 +2412,7 @@ class Mesh(object):
 
                 anglea = v1.angle(v2)
                 # print angle_between
-                print(anglea)
+                logger.debug("anglea %s", anglea)
                 a = v1.cross(v2)
                 a = a.setLength(height)
                 if anglea < 0.1:
@@ -2441,21 +2440,19 @@ class Mesh(object):
         for face in faces:
             sides = len(self.faces[face])
             verts_count_old = len(self.vertices)
-            print("sides")
-            print(sides)
+            logger.debug("sides %s", sides)
             modulo = math.modf(((sides - 4) / 4.0) / 1)
             less_sides = int(modulo[1])
             more_sides = less_sides + 1
             if modulo[0] == 0.0 or modulo[0] == 0.25:
                 more_sides = less_sides
             less_sides - 2
-            print("divisions")
-            print(more_sides, less_sides)
+            logger.debug("divisions more_sides=%s less_sides=%s", more_sides, less_sides)
             more_connections = []
-            print("connections " + str(more_sides))
+            logger.debug("connections %s", more_sides)
             for i in range(0, more_sides):
                 c = more_sides * 2 - i + 1 + less_sides
-                print(self.faces[face][i], self.faces[face][c])
+                logger.debug("connection %s %s", self.faces[face][i], self.faces[face][c])
                 more_connections.append(
                     [self.faces[face][i], self.faces[face][c]]
                 )
@@ -2468,7 +2465,7 @@ class Mesh(object):
                     self.addVertex(Point(a.x, a.y, a.z))
 
             # connect faces
-            print("left")
+            logger.debug("left")
             for i in range(1, more_sides):
                 w = [
                     self.faces[face][i],
@@ -2476,9 +2473,9 @@ class Mesh(object):
                     less_sides * (i - 1) + verts_count_old,
                     self.faces[face][i - 1],
                 ]
-                print(w)
+                logger.debug("face %s", w)
                 self.addFace(w)
-            print("top")
+            logger.debug("top")
             for i in range(more_sides + 2, more_sides + 1 + less_sides):
                 w = [
                     self.faces[face][i],
@@ -2496,9 +2493,9 @@ class Mesh(object):
                     + verts_count_old,
                     self.faces[face][i - 1],
                 ]
-                print(w)
+                logger.debug("face %s", w)
                 self.addFace(w)
-            print("right")
+            logger.debug("right")
             for i in range(
                 more_sides + less_sides + 3,
                 more_sides + more_sides + less_sides + 2,
@@ -2514,9 +2511,9 @@ class Mesh(object):
                     + verts_count_old,
                     self.faces[face][i - 1],
                 ]
-                print(w)
+                logger.debug("face %s", w)
                 self.addFace(w)
-            print("bottom")
+            logger.debug("bottom")
             for i in range(
                 more_sides * 2 + less_sides + 4,
                 more_sides * 2 + less_sides + 3 + less_sides,
@@ -2527,9 +2524,9 @@ class Mesh(object):
                     less_sides * 2 + more_sides * 2 + 3 - i + verts_count_old,
                     self.faces[face][i - 1],
                 ]
-                print(w)
+                logger.debug("face %s", w)
                 self.addFace(w)
-            print("grid")
+            logger.debug("grid")
             for i in range(1, more_sides):
                 for j in range(1, less_sides):
                     w = [
@@ -2538,9 +2535,9 @@ class Mesh(object):
                         less_sides * i + j + verts_count_old,
                         j + (i - 1) * less_sides + verts_count_old,
                     ]
-                    print(w)
+                    logger.debug("face %s", w)
                     self.addFace(w)
-            print("corners")
+            logger.debug("corners")
             w = [
                 self.faces[face][more_sides - 1],
                 self.faces[face][more_sides],
@@ -2550,7 +2547,7 @@ class Mesh(object):
                 + (more_sides + 1) % (less_sides + 1)
                 + verts_count_old,
             ]
-            print(w)
+            logger.debug("corner face %s", w)
             self.addFace(w)
             w = [
                 self.faces[face][more_sides + less_sides],
@@ -2558,7 +2555,7 @@ class Mesh(object):
                 self.faces[face][more_sides + less_sides + 2],
                 more_sides * less_sides - 1 + verts_count_old,
             ]
-            print(w)
+            logger.debug("corner face %s", w)
             self.addFace(w)
             w = [
                 self.faces[face][2 * more_sides + less_sides + 1],
@@ -2566,7 +2563,7 @@ class Mesh(object):
                 self.faces[face][2 * more_sides + less_sides + 3],
                 less_sides - 1 + verts_count_old,
             ]
-            print(w)
+            logger.debug("corner face %s", w)
             self.addFace(w)
             if math.modf(sides / 2.0)[0] != 0:
                 w = [
@@ -2574,16 +2571,16 @@ class Mesh(object):
                     self.faces[face][2 * more_sides + 2 * less_sides + 3],
                     verts_count_old,
                 ]
-                print(w)
+                logger.debug("corner face %s", w)
                 self.addFace(w)
-                print("not even")
+                logger.debug("not even")
                 w = [
                     self.faces[face][2 * more_sides + 2 * less_sides + 3],
                     self.faces[face][2 * more_sides + 2 * less_sides + 4],
                     self.faces[face][0],
                     verts_count_old,
                 ]
-                print(w)
+                logger.debug("face %s", w)
                 self.addFace(w)
             else:
                 w = [
@@ -2592,7 +2589,7 @@ class Mesh(object):
                     self.faces[face][0],
                     verts_count_old,
                 ]
-                print(w)
+                logger.debug("face %s", w)
                 self.addFace(w)
 
             self.__deleteFaces([face])
@@ -2913,7 +2910,7 @@ if __name__ == "__main__":
         Vector(0.5, 0, 0),
     ]
     we.fromPointSet(p)
-    print(we.vectors)
+    logger.debug("vectors %s", we.vectors)
     we = BBox()
     we.obbFromPointSet(p)
-    print(we.axis)
+    logger.debug("axis %s", we.axis)

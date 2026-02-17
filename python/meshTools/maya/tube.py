@@ -1,9 +1,13 @@
+import logging
 import math
-import meshTools.lists as lists
-from meshTools.geometry import Transform, Vector
-from meshTools.geometry import Point
+
 import maya.OpenMaya as OpenMaya
+
+import meshTools.lists as lists
+from meshTools.geometry import Point, Transform, Vector
 from meshTools.maya.mesh import MayaMesh
+
+logger = logging.getLogger(__name__)
 
 
 class TubeSegment:
@@ -48,7 +52,7 @@ class MayaTube:
         elif "curveFn" in kwargs:
             curve_fn = kwargs.get("curveFn")
         else:
-            print("No input curve for MayaTube")
+            logger.warning("No input curve for MayaTube")
             return
         reverse = kwargs.get("reverse", 0)
         even = kwargs.get("even", 0)
@@ -112,9 +116,9 @@ class MayaTube:
                         tile.faces[0] += [len(tile.vertices) - 1]
 
                     except Exception as e:
-                        print("except profileDag,%s" % e)
+                        logger.warning("except profileDag: %s", e)
             else:
-                print("Unknown class of input profile")
+                logger.warning("Unknown class of input profile")
                 return
             combine_tile = MayaMesh(empty=1)
 
@@ -141,10 +145,10 @@ class MayaTube:
                         tile.vertices += [Point(point)]
                         tile.faces[0] += [len(tile.vertices) - 1]
                     except Exception as e:
-                        print("except profileFn,%s" % e)
+                        logger.warning("except profileFn: %s", e)
             combine_tile = MayaMesh(empty=1)
         else:
-            print("No input profile for MayaTube")
+            logger.warning("No input profile for MayaTube")
             return
 
         lst = []
@@ -170,7 +174,6 @@ class MayaTube:
             self.curve_length = 0
             for i in range(len(lst)):
                 try:
-                    print(lst[i], point)
                     curve_fn.getPointAtParam(
                         lst[i], point, OpenMaya.MSpace.kWorld
                     )
@@ -181,7 +184,7 @@ class MayaTube:
                         )
                     ]
                 except Exception as e:
-                    print("except knots,%s" % e)
+                    logger.warning("except knots: %s", e)
             for i in range(len(self.knots)):
                 for j in range(nsegments):
                     if i == len(self.knots) - 1 and j > 0:
@@ -241,7 +244,7 @@ class MayaTube:
                             )
                             self.curve_length += length
                         except Exception as e:
-                            print("except length,%s" % e)
+                            logger.warning("except length: %s", e)
             self.curve_length *= growth
         else:
             # in case of even distribution
@@ -264,7 +267,7 @@ class MayaTube:
                             curve_fn, lst[i - 1], lst[i], 100
                         )
                 except Exception as e:
-                    print("except knots even,%s" % e)
+                    logger.warning("except knots even: %s", e)
 
             first_knot = 0
             self.curve_length *= growth
@@ -300,7 +303,7 @@ class MayaTube:
                         first_knot + 1
                     ]
                 except Exception as e:
-                    print("except first last knot,%s" % e)
+                    logger.warning("except first last knot: %s", e)
 
         y_axis = Vector(0, 1, 0)
         z_axis = Vector(0, 0, 1)
