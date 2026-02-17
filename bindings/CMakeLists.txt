@@ -1,2 +1,5 @@
 add_subdirectory(geometry_mesh)
+add_subdirectory(chull)
+add_subdirectory(delaunay)
+add_subdirectory(noise)
 add_subdirectory(bezier)

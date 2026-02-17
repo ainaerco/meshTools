@@ -2,7 +2,7 @@
 
 Incremental algorithm: starts from a bounding tetrahedron, inserts points
 and updates the tetrahedral mesh. Tetra class holds vertices, circumsphere,
-and parent/child links.
+and parent/child links. Uses C++ _delaunay extension when available.
 """
 
 from __future__ import annotations
@@ -12,6 +12,16 @@ import logging
 from .geometry import Point
 
 logger = logging.getLogger(__name__)
+
+try:
+    from . import _delaunay
+    _DelaunayCpp = _delaunay.Delaunay
+except ImportError:
+    try:
+        import _delaunay
+        _DelaunayCpp = _delaunay.Delaunay
+    except ImportError:
+        _DelaunayCpp = None
 
 
 def _det4(m: list) -> float:
@@ -103,8 +113,8 @@ class Tetra(object):
         return "[" + s + "]"
 
 
-class Delaunay(object):
-    """3D Delaunay tetrahedralization built incrementally from a point set."""
+class DelaunayPy(object):
+    """3D Delaunay tetrahedralization (pure Python implementation)."""
 
     def addTetrahedra(self, v: Point, tetra: Tetra, case: int) -> None:
         """Insert vertex v by subdividing tetra into four child tetrahedra.
@@ -240,6 +250,11 @@ class Delaunay(object):
             + str(len(self.tetras))
             + "\ntetrahedrons: "
             + t
-        )  # \
-        # +"\ntetra_childs: "+str(len(self.tetra_child))+"\ntetra_childs: "+tc\
-        # +"\ntetra_parent: "+str(len(self.tetra_parent))+"\ntetra_parent: "+tp\
+        )
+
+
+# Use C++ implementation when available, else pure Python
+if _DelaunayCpp is not None:
+    Delaunay = _DelaunayCpp
+else:
+    Delaunay = DelaunayPy
