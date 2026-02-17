@@ -25,7 +25,7 @@ template <class T> class List : public std::vector<T> {
      * @return Grouped element
      */
     T group_duplicates(const List<T> &l);
-    
+
     /**
      * @brief Find the index of an item in the list
      * @param item The item to find

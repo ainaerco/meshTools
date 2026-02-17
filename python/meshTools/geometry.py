@@ -1,3 +1,10 @@
+"""Geometry module: vectors, transforms, bounding boxes, rays, polygons.
+
+Exposes C extension primitives when available (_geometry), otherwise imports
+from the top-level build. Provides Point as a Vector subclass with optional
+parent face tracking.
+"""
+
 # Prefer package-internal extension (pip install); fall back to top-level (dev with build on path)
 try:
     from ._geometry import (
@@ -67,6 +74,8 @@ EPSILON = 0.000001
 
 
 class Point(Vector):
+    """3D point, subclass of Vector with optional parent face tracking."""
+
     def __init__(self, *args):
         if len(args) == 0:
             xx, yy, zz = 0, 0, 0
@@ -83,7 +92,12 @@ class Point(Vector):
         Vector.__init__(self, float(xx), float(yy), float(zz))
         self.parent_faces = []
 
-    def addRuler(self, other):
+    def addRuler(self, other: object) -> None:
+        """Store a ruler reference for this point (e.g., for measurement UI).
+
+        Args:
+            other: Ruler reference to store.
+        """
         self.ruler = other
 
 

@@ -27,8 +27,7 @@ float b(float t);
  * @param t Parameter value
  * @return Blending function value
  */
-inline float B(const int &n, float t)
-{
+inline float B(const int &n, float t) {
     switch (n) {
     case 1:
         return -t * (t - 1.0f) * (t - 2.0f) / 6.0f;
@@ -50,13 +49,14 @@ inline float B(const int &n, float t)
  * @class Lagrange
  * @brief Lagrange polynomial interpolation
  *
- * This class performs Lagrange polynomial interpolation on a set of control points.
+ * This class performs Lagrange polynomial interpolation on a set of control
+ * points.
  */
 class Lagrange {
   public:
     /** @brief Default constructor */
     Lagrange() {}
-    
+
     /**
      * @brief Construct from control points
      * @param points Vector of control point values
@@ -65,7 +65,7 @@ class Lagrange {
         mPoints = points;
         mNumPoints = points.size();
     }
-    
+
     /**
      * @brief Interpolate to generate a desired number of points
      * @param desired_num Number of interpolated points to generate
@@ -88,7 +88,7 @@ class Bezier {
   public:
     /** @brief Default constructor */
     Bezier() {}
-    
+
     /**
      * @brief Construct from control points
      * @param points Vector of control point values
@@ -98,7 +98,7 @@ class Bezier {
 
         mNumPoints = points.size();
     };
-    
+
     /**
      * @brief Interpolate to generate a desired number of points
      * @param desired_num Number of interpolated points to generate
@@ -121,7 +121,7 @@ class Spline {
   public:
     /** @brief Default constructor */
     Spline() {}
-    
+
     /**
      * @brief Construct from control points
      * @param points Vector of control point values
@@ -130,7 +130,7 @@ class Spline {
         mPoints = points;
         mNumPoints = points.size();
     }
-    
+
     /**
      * @brief Interpolate to generate a desired number of points
      * @param desired_num Number of interpolated points to generate
@@ -147,7 +147,8 @@ class Spline {
  * @class Spline1
  * @brief Alternative spline interpolation implementation
  *
- * This class provides an alternative spline interpolation using raw float arrays.
+ * This class provides an alternative spline interpolation using raw float
+ * arrays.
  */
 class Spline1 {
   public:

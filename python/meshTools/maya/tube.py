@@ -1,3 +1,10 @@
+"""Maya tube/sweep along NURBS curve.
+
+MayaTube builds a mesh by sweeping a profile along a curve with options for
+tiling, taper, twist, growth, and scale corners. Uses MayaTube segments for
+placement along the curve.
+"""
+
 import logging
 import math
 
@@ -11,6 +18,8 @@ logger = logging.getLogger(__name__)
 
 
 class TubeSegment:
+    """Single segment along a tube: origin, tangent, normal, up, and parameter."""
+
     def __init__(self, **kwargs):
         self.parameter = kwargs.get("parameter", 0)
         self.angle = kwargs.get("angle", 0)
@@ -46,6 +55,8 @@ class TubeSegment:
 
 
 class MayaTube:
+    """Builds a mesh by sweeping a profile along a NURBS curve with taper, twist, tiling, etc."""
+
     def __init__(self, **kwargs):
         if "curveDag" in kwargs:
             curve_fn = OpenMaya.MFnNurbsCurve(kwargs.get("curveDag"))
@@ -221,9 +232,7 @@ class MayaTube:
                                 param, point, OpenMaya.MSpace.kWorld
                             )
                             try:
-                                curve_fn.normal(
-                                    param, OpenMaya.MSpace.kWorld
-                                )
+                                curve_fn.normal(param, OpenMaya.MSpace.kWorld)
                             except Exception:
                                 if param != self.knots[i].parameter:
                                     continue

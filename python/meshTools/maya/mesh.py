@@ -1,3 +1,9 @@
+"""Maya mesh integration: MFnMesh wrapper and mesh operations.
+
+MayaMesh extends Mesh with OpenMaya MFnMesh loading/saving, Maya selection
+integration, and Maya-specific operations. Requires Maya Python environment.
+"""
+
 import logging
 import math
 import random
@@ -17,6 +23,8 @@ sel_object = None
 
 
 class MayaMesh(Mesh):
+    """Mesh backed by Maya MFnMesh; loads/saves vertices, faces, normals from Maya DAG."""
+
     def __init__(self, **kwargs):
         super(MayaMesh, self).__init__()
         self.mode = "maya"

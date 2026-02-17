@@ -1,3 +1,10 @@
+"""3D convex hull via incremental construction.
+
+Implements the double-triangle method: start from a non-degenerate tetrahedron,
+then add points one by one, updating faces and edges. Exports hull as
+faces and vertices for mesh use.
+"""
+
 import logging
 
 from .geometry import Point, Vector
@@ -7,6 +14,8 @@ debug = False
 
 
 class Vertex:
+    """Convex hull vertex: point v, index vnum, and flags for hull construction."""
+
     def __init__(self, v, vnum=None, duplicate=None, onhull=False, mark=False):
         self.v = v
         self.vnum = vnum
@@ -46,6 +55,8 @@ class Vertex:
 
 
 class Edge:
+    """Half-edge with adjacent faces, endpoints, and visibility flags."""
+
     enum = 0
 
     def __init__(
@@ -77,6 +88,8 @@ class Edge:
 
 
 class Face:
+    """Triangular face with edges and vertices; used for hull construction and export."""
+
     fnum = 0
 
     def __init__(
@@ -190,6 +203,8 @@ PROCESSED = True
 
 
 class Hull:
+    """Convex hull of a 3D point set. Use exportHull() for [faces, vertices]."""
+
     def __init__(self, v):
         self.vertices = []
         self.edges = []
@@ -200,6 +215,7 @@ class Hull:
         self.EdgeOrderOnFaces()
 
     def ReadVertices(self, v):
+        """Create Vertex objects from point list v."""
         self.vertices = [Vertex(vc, i) for i, vc in enumerate(v)]
 
     def EdgeOrderOnFaces(self):
@@ -504,7 +520,13 @@ class Hull:
 
         return evi, vi
 
-    def exportHull(self):
+    def exportHull(self) -> list:
+        """Return [faces, vertices] for mesh use.
+
+        Returns:
+            [faces, vertices] where faces are [[v0,v1,v2], ...] and
+            vertices are Points.
+        """
         faces = []
         for i in range(len(self.vertices)):
             self.vertices[i].vnum = i

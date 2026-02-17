@@ -1,10 +1,32 @@
+"""Ear-cutting polygon triangulation.
+
+Triangulates planar polygons by repeatedly clipping convex ears until
+only a triangle remains. Handles both convex and concave polygons.
+"""
+
+from __future__ import annotations
+
 from copy import copy
 
 from .geometry import EPSILON
 
 
 class Polygon:
-    def __init__(self, vertices, polygon, normal):
+    """Planar polygon with ear-cutting triangulation support."""
+
+    def __init__(
+        self,
+        vertices: list,
+        polygon: list[int],
+        normal,
+    ) -> None:
+        """Build polygon from vertices list, polygon indices, and face normal.
+
+        Args:
+            vertices: List of vertex positions (Vector-like).
+            polygon: Indices into vertices for polygon boundary.
+            normal: Face normal vector.
+        """
         self.vertex = vertices
         self.indices = []
         self.vertex_count = len(polygon)
@@ -14,7 +36,12 @@ class Polygon:
         self.orig_polygon = copy(polygon)
         self.orig_vertex_count = int(self.vertex_count)
 
-    def triangulateIndices(self):
+    def triangulateIndices(self) -> list[list[int]]:
+        """Triangulate the polygon using ear-cutting.
+
+        Returns:
+            List of triangles, each [v0, v1, v2] as orig_polygon indices.
+        """
         triangles = []
         old_count = self.orig_vertex_count - 2
         while self.vertex_count > 3 and old_count > 0:
@@ -60,13 +87,26 @@ class Polygon:
         # print self.interior_edges
         return triangles
 
-    def removeVertex(self, i):
+    def removeVertex(self, i: int) -> None:
+        """Remove vertex at index i from the working vertex list.
+
+        Args:
+            i: Vertex index to remove.
+        """
         for j in range(i + 1, self.vertex_count):
             self.indices[j - 1] = self.indices[j]
         self.indices.pop(self.vertex_count - 1)
         self.vertex_count -= 1
 
-    def isAnyPointInside(self, i):
+    def isAnyPointInside(self, i: int) -> bool:
+        """Check if any other vertex lies inside the ear triangle at index i.
+
+        Args:
+            i: Vertex index (potential ear tip).
+
+        Returns:
+            True if any vertex is inside the ear triangle.
+        """
         for j in range(self.vertex_count):
             if i != j and self.isPointInside(
                 self.vertex[self.indices[j]], self.vertex[self.indices[i + 1]]
@@ -74,7 +114,16 @@ class Polygon:
                 return True
         return False
 
-    def isPointInside(self, point, q):
+    def isPointInside(self, point, q) -> bool:
+        """Barycentric test: is point inside triangle (e0, e1, q)?
+
+        Args:
+            point: Point to test.
+            q: Third triangle vertex (e0, e1 from convexTest).
+
+        Returns:
+            True if point is inside.
+        """
         pmq = point - q
         ntmp = pmq.cross(self.e1)
 
@@ -92,7 +141,15 @@ class Polygon:
         else:
             return False
 
-    def convexTest(self, i):
+    def convexTest(self, i: int) -> int:
+        """Classify vertex at index i as convex, concave, or degenerate.
+
+        Args:
+            i: Vertex index to test.
+
+        Returns:
+            1 (convex), 0 (concave), or -1 (degenerate).
+        """
         self.e0 = (
             self.vertex[self.indices[i - 1]] - self.vertex[self.indices[i + 1]]
         )

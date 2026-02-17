@@ -26,7 +26,7 @@ class Vector {
   public:
     /** @brief Default constructor, initializes vector to (0, 0, 0) */
     Vector() : x(0.0), y(0.0), z(0.0) {}
-    
+
     /**
      * @brief Construct from std::vector
      * @param a Vector containing at least 3 float values
@@ -52,71 +52,71 @@ class Vector {
      * @return Vector components as a list [x, y, z]
      */
     std::vector<float> toList() const;
-    
+
     /**
      * @brief Convert vector to string representation
      * @return String representation of the vector
      */
     std::string toString() const;
-    
+
     /**
      * @brief Set the length of the vector
      * @param length Desired length
      * @return New vector with the specified length in the same direction
      */
     Vector setLength(float length) const;
-    
+
     /**
      * @brief Normalize the vector to unit length
      * @return Normalized vector
      */
     Vector normalize() const;
-    
+
     /**
      * @brief Check if vector is null (all components are zero)
      * @return True if vector is null, false otherwise
      */
     bool isNull() const;
-    
+
     /**
      * @brief Test if vector is approximately zero
      * @return True if vector is approximately zero, false otherwise
      */
     bool zeroTest() const;
-    
+
     /**
      * @brief Calculate the squared length of the vector
      * @return Squared length (magnitude) of the vector
      */
     float lengthSquared() const;
-    
+
     /**
      * @brief Calculate the length of the vector
      * @return Length (magnitude) of the vector
      */
     float length() const;
-    
+
     /**
      * @brief Calculate angle between this vector and another
      * @param other The other vector
      * @return Angle in radians between the two vectors
      */
     float angle(const Vector &other) const;
-    
+
     /**
      * @brief Calculate dot product with another vector
      * @param other The other vector
      * @return Dot product result
      */
     float dot(const Vector &other) const;
-    
+
     /**
      * @brief Calculate cross product with another vector
      * @param other The other vector
      * @return Cross product result (perpendicular vector)
      */
     Vector cross(const Vector &other) const;
-    
+
     /**
      * @brief Linear interpolation between this vector and another
      * @param other The target vector
@@ -124,7 +124,7 @@ class Vector {
      * @return Interpolated vector
      */
     Vector lerp(const Vector &other, float factor) const;
-    
+
     /**
      * @brief Spherical linear interpolation between this vector and another
      * @param other The target vector
@@ -132,21 +132,21 @@ class Vector {
      * @return Interpolated vector
      */
     Vector slerp(const Vector &other, float factor) const;
-    
+
     /**
      * @brief Project this vector onto another vector
      * @param other The vector to project onto
      * @return Projected vector
      */
     Vector project(const Vector &other) const;
-    
+
     /**
      * @brief Reflect this vector across another vector
      * @param other The vector to reflect across (should be normalized)
      * @return Reflected vector
      */
     Vector reflect(const Vector &other) const;
-    
+
     /**
      * @brief Rotate this vector around an axis
      * @param axis The rotation axis
@@ -154,7 +154,7 @@ class Vector {
      * @return Rotated vector
      */
     Vector rotateAround(const Vector &axis, float angle) const;
-    
+
     /**
      * @brief Apply a transformation matrix to this vector
      * @param t The transformation matrix
@@ -219,7 +219,7 @@ class Vector {
     friend const Vector operator*(const Vector &left, const float &right) {
         return Vector(left.x * right, left.y * right, left.z * right);
     }
-    
+
     /**
      * @brief Scalar-vector multiplication operator
      * @param left Scalar operand
@@ -229,7 +229,7 @@ class Vector {
     friend const Vector operator*(const float &left, const Vector &right) {
         return Vector(left * right.x, left * right.y, left * right.z);
     }
-    
+
     /**
      * @brief Vector-scalar multiplication assignment operator
      * @param v Scalar to multiply by
@@ -251,7 +251,7 @@ class Vector {
     friend const Vector operator/(const Vector &left, const float &right) {
         return left * (1 / right);
     }
-    
+
     /**
      * @brief Vector-scalar division assignment operator
      * @param v Scalar to divide by

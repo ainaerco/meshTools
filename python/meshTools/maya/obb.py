@@ -1,3 +1,9 @@
+"""Create oriented bounding box (OBB) from selected Maya points.
+
+Computes OBB from selection, creates a polyCube with matching transform,
+and aligns it to the OBB axes.
+"""
+
 from math import degrees
 
 from meshTools.geometry import BBox, Transform, Vector
@@ -5,6 +11,7 @@ import maya.cmds as cmds
 
 
 def perform(**kwargs):
+    """Build OBB from current Maya selection and create aligned polyCube."""
     sel = cmds.ls(sl=True)
     sel3 = []
     for s in sel:

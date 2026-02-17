@@ -1,3 +1,9 @@
+"""Scatter/tile objects across mesh faces.
+
+TileScatter places copies (duplicate/instance/combine) on mesh faces with
+patterns (even/straight), alignment, and random rotation/translate/scale.
+"""
+
 import math
 import random
 

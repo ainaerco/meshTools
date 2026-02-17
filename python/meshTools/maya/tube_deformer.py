@@ -1,3 +1,9 @@
+"""Maya tube deformer node: deform mesh along NURBS curve.
+
+MPxNode that takes curve + profile, outputs deformed mesh with
+segments, taper, twist, growth, scale corners, etc.
+"""
+
 import sys
 import maya.OpenMaya as OpenMaya
 import maya.OpenMayaMPx as OpenMayaMPx
@@ -10,7 +16,8 @@ tubeDeformerId = OpenMaya.MTypeId(0x0020A52C)
 
 
 class tubeDeformer(OpenMayaMPx.MPxNode):
-    # class variables
+    """Maya deformer node: deform input mesh along curve using MayaTube logic."""
+
     # firsttime == 1
 
     segments = OpenMaya.MObject()

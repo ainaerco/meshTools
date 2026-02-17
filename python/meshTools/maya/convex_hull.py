@@ -1,3 +1,9 @@
+"""Maya convex hull: generate low-poly hull from mesh.
+
+Loads selected mesh, runs generateConvexHull with configurable point count,
+and writes result to a new mesh node.
+"""
+
 import logging
 from time import time
 
@@ -9,9 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 def perform(**kwargs):
-    """
-    kwargs = [(pointCount,1000),(node_path,)]
-    """
+    """Build convex hull from selected mesh. kwargs: pointCount (default 1000), node_path (optional)."""
     pointCount = kwargs.get("pointCount", 1000)
     node = kwargs.get("node_path", None)
 

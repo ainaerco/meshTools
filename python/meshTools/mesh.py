@@ -1,3 +1,10 @@
+"""Polygon mesh with vertices, faces, normals, and selection.
+
+Pure-Python mesh representation used by Maya and other front ends.
+Supports convex hull, Delaunay, noise-based operations, and various
+selection/neighbor utilities.
+"""
+
 import logging
 import math  # degrees,tan,pi,sin,cos,modf
 import random
@@ -31,11 +38,14 @@ logger = logging.getLogger(__name__)
 
 
 def printv(*args):
+    """Log debug message if VERBOSE >= last arg (verbosity level)."""
     if VERBOSE >= args[-1]:
         logger.debug("%s", args[:-1])
 
 
 class Mesh(object):
+    """Polygon mesh: vertices, faces, normals, edges, UVs; supports selection and operations."""
+
     def __init__(self):
         self.faces = []
         self.vertices = []
@@ -1910,8 +1920,12 @@ class Mesh(object):
         faces_terminate = lists.remove_duplicates(
             faces_terminate, faces_involved
         )
-        logger.debug("faces_terminate %s faces_involved %s vertices_involved %s",
-                     faces_terminate, faces_involved, vertices_involved)
+        logger.debug(
+            "faces_terminate %s faces_involved %s vertices_involved %s",
+            faces_terminate,
+            faces_involved,
+            vertices_involved,
+        )
         chamfer_data = []
 
         for face in faces_involved:
@@ -1981,11 +1995,16 @@ class Mesh(object):
                     repl_id = lists.find(self.faces[face_t], chamfer_element[0])
 
                     if repl_id != -1:
-                        logger.debug("repl_id %s face_t %s", repl_id,
-                                     (self.faces[face_t],
-                                      self.faces[face_t][: repl_id - 1]
-                                      + chamfer_element[1:]
-                                      + self.faces[face_t][repl_id + 1 :]))
+                        logger.debug(
+                            "repl_id %s face_t %s",
+                            repl_id,
+                            (
+                                self.faces[face_t],
+                                self.faces[face_t][: repl_id - 1]
+                                + chamfer_element[1:]
+                                + self.faces[face_t][repl_id + 1 :],
+                            ),
+                        )
 
                         self.faces[face_t] = (
                             self.faces[face_t][: repl_id - 1]
@@ -2354,12 +2373,16 @@ class Mesh(object):
             if modulo[0] == 0.0 or modulo[0] == 0.25:
                 more_sides = less_sides
             less_sides - 2
-            logger.debug("divisions more_sides=%s less_sides=%s", more_sides, less_sides)
+            logger.debug(
+                "divisions more_sides=%s less_sides=%s", more_sides, less_sides
+            )
             more_connections = []
             logger.debug("connections %s", more_sides)
             for i in range(0, more_sides):
                 c = more_sides * 2 - i + 1 + less_sides
-                logger.debug("connection %s %s", self.faces[face][i], self.faces[face][c])
+                logger.debug(
+                    "connection %s %s", self.faces[face][i], self.faces[face][c]
+                )
                 more_connections.append(
                     [self.faces[face][i], self.faces[face][c]]
                 )

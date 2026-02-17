@@ -1,3 +1,12 @@
+"""3D Delaunay tetrahedralization.
+
+Incremental algorithm: starts from a bounding tetrahedron, inserts points
+and updates the tetrahedral mesh. Tetra class holds vertices, circumsphere,
+and parent/child links.
+"""
+
+from __future__ import annotations
+
 import logging
 from random import random
 
@@ -7,7 +16,9 @@ logger = logging.getLogger(__name__)
 
 
 class Tetra(object):
-    def __init__(self, v0, v1, v2, v3):  #
+    """Tetrahedron with vertices, circumcenter, circumradius, and parent/child links."""
+
+    def __init__(self, v0: Point, v1: Point, v2: Point, v3: Point) -> None:
         self.vertices = [v0, v1, v2, v3]
         self.child = []
         self.parent = []
@@ -26,7 +37,8 @@ class Tetra(object):
         self.determinant = t.determinant()
         self.calculateCircumsphere()
 
-    def calculateCircumsphere(self):
+    def calculateCircumsphere(self) -> None:
+        """Compute circumcenter and circumradius from the four vertices."""
         v0, v1 = self.vertices[0], self.vertices[1]
         v2, v3 = self.vertices[2], self.vertices[3]
         v0_len = v0.lengthSquared()
@@ -73,7 +85,16 @@ class Tetra(object):
 
 
 class Delaunay(object):
-    def addTetrahedra(self, v, tetra, case):
+    """3D Delaunay tetrahedralization built incrementally from a point set."""
+
+    def addTetrahedra(self, v: Point, tetra: Tetra, case: int) -> None:
+        """Insert vertex v by subdividing tetra into four child tetrahedra.
+
+        Args:
+            v: New vertex to insert.
+            tetra: Parent tetrahedron to subdivide.
+            case: Subdivision case (0 = standard insertion).
+        """
         t = tetra
         if case == 0:
             self.vertices += [v]
@@ -93,7 +114,16 @@ class Delaunay(object):
 
             self.tetras += [nt0, nt1, nt2, nt3]
 
-    def pointInTetrahedra(self, v, tetra):
+    def pointInTetrahedra(self, v: Point, tetra: Tetra) -> None:
+        """Check if v lies inside tetra; if so, add it via addTetrahedra.
+
+        Uses barycentric sign test. Modifies self.vertices and self.tetras when
+        point is inside.
+
+        Args:
+            v: Point to test.
+            tetra: Tetrahedron to test against.
+        """
         t = Transform()
         v0 = tetra[0]
         v1 = tetra[1]
@@ -155,7 +185,7 @@ class Delaunay(object):
         # If it is meaningful to you, the quantities bi = Di/D0 are the usual barycentric coordinates.
         # Comparing signs of Di and D0 is only a check that P and Vi are on the same side of boundary i.
 
-    def __init__(self, vertices, max):
+    def __init__(self, vertices: list[Point], max: float) -> None:
         self.orig_vertices = vertices
         k = 3 * max
         v0, v1, v2, v3 = (

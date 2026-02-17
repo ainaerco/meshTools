@@ -1,3 +1,10 @@
+"""Simplex-style procedural noise for 2D, 3D, and 4D coordinates.
+
+Provides scalar and vector variants: snoise, vsnoise, fBm, turbulence, etc.
+All noise returns values in [-1, 1] unless noted. Uses gradient tables from
+noise_tabs for deterministic, repeatable results.
+"""
+
 from math import floor
 
 from .noise_tabs import grads2, grads3, grads4, perm
@@ -5,15 +12,43 @@ from .noise_tabs import grads2, grads3, grads4, perm
 TABMASK = 0xFF
 
 
-def floor2int(val):
+def floor2int(val: float) -> int:
+    """Convert float to int via floor.
+
+    Args:
+        val: Input value.
+
+    Returns:
+        Floored integer.
+    """
     return int(floor(val))
 
 
-def lerp(t, a, b):
+def lerp(t: float, a: float, b: float) -> float:
+    """Linear interpolation: a + (b - a) * t.
+
+    Args:
+        t: Interpolation parameter in [0, 1].
+        a: Start value.
+        b: End value.
+
+    Returns:
+        Interpolated value.
+    """
     return a + (b - a) * t
 
 
-def clamp(val, low, high):
+def clamp(val: float, low: float, high: float) -> float:
+    """Clamp val to [low, high].
+
+    Args:
+        val: Value to clamp.
+        low: Lower bound.
+        high: Upper bound.
+
+    Returns:
+        Clamped value in [low, high].
+    """
     if val < low:
         return low
     elif val > high:
@@ -22,7 +57,16 @@ def clamp(val, low, high):
         return val
 
 
-def imod(a, b):
+def imod(a: float, b: float) -> float:
+    """Integer modulo: remainder of a / b, always in [0, b).
+
+    Args:
+        a: Dividend.
+        b: Divisor.
+
+    Returns:
+        Remainder in [0, b).
+    """
     n = int(a / float(b))
     a -= n * b
     if a < 0:
@@ -31,6 +75,8 @@ def imod(a, b):
 
 
 class Noise(object):
+    """Procedural Simplex-style noise generator (2D, 3D, 4D)."""
+
     def __init__(self):
         self.xperiod = 1
         self.yperiod = 1
@@ -213,13 +259,43 @@ class Noise(object):
 
             return lerp(st, e, f)
 
-    def tabindex2(self, ix, iy):
+    def tabindex2(self, ix: int, iy: int) -> int:
+        """Hash (ix, iy) to permutation index for 2D noise.
+
+        Args:
+            ix: Integer x coordinate.
+            iy: Integer y coordinate.
+
+        Returns:
+            Permutation table index.
+        """
         return perm[(ix + perm[iy & TABMASK]) & TABMASK]
 
-    def tabindex3(self, ix, iy, iz):
+    def tabindex3(self, ix: int, iy: int, iz: int) -> int:
+        """Hash (ix, iy, iz) to permutation index for 3D noise.
+
+        Args:
+            ix: Integer x coordinate.
+            iy: Integer y coordinate.
+            iz: Integer z coordinate.
+
+        Returns:
+            Permutation table index.
+        """
         return perm[(ix + perm[(iy + perm[iz & TABMASK]) & TABMASK]) & TABMASK]
 
-    def tabindex4(self, ix, iy, iz, it):
+    def tabindex4(self, ix: int, iy: int, iz: int, it: int) -> int:
+        """Hash (ix, iy, iz, it) to permutation index for 4D noise.
+
+        Args:
+            ix: Integer x coordinate.
+            iy: Integer y coordinate.
+            iz: Integer z coordinate.
+            it: Integer t coordinate.
+
+        Returns:
+            Permutation table index.
+        """
         return perm[
             (
                 it
@@ -230,8 +306,12 @@ class Noise(object):
             & TABMASK
         ]
 
-    def snoise(self, *args):
-        # Returns a value between -1 and 1
+    def snoise(self, *args) -> float:
+        """Scalar noise. Accepts (x,y), (x,y,z), (x,y,z,t), or Vector.
+
+        Returns:
+            Noise value in [-1, 1].
+        """
         if len(args) == 1:
             x, y, z = args[0].x, args[0].y, args[0].z
             return self.noise_template(self.tabindex3, x, y, z)
@@ -245,7 +325,26 @@ class Noise(object):
             x, y, z, t = args[0], args[1], args[2], args[3]
             return self.noise_template(self.tabindex4, x, y, z, t)
 
-    def fBm(self, x, y, z, octaves, lacunarity, gain):
+    def fBm(
+        self,
+        x: float,
+        y: float,
+        z: float,
+        octaves: int,
+        lacunarity: float,
+        gain: float,
+    ) -> float:
+        """Fractional Brownian motion: summed octaves of scaled snoise.
+
+        Args:
+            x, y, z: 3D coordinates.
+            octaves: Number of noise octaves.
+            lacunarity: Frequency multiplier per octave.
+            gain: Amplitude multiplier per octave.
+
+        Returns:
+            fBm value in [0, 1].
+        """
         res = 0
         amp = 1
         for i in range(octaves):
@@ -256,7 +355,26 @@ class Noise(object):
             z *= lacunarity
         return 0.5 * (res + 1.0)
 
-    def vfBm(self, x, y, z, octaves, lacunarity, gain):
+    def vfBm(
+        self,
+        x: float,
+        y: float,
+        z: float,
+        octaves: int,
+        lacunarity: float,
+        gain: float,
+    ) -> list[float]:
+        """Vector fBm: summed vector noise octaves.
+
+        Args:
+            x, y, z: 3D coordinates.
+            octaves: Number of noise octaves.
+            lacunarity: Frequency multiplier per octave.
+            gain: Amplitude multiplier per octave.
+
+        Returns:
+            [ox, oy, oz] vector components.
+        """
         amp = 1
         ox, oy, oz = 0.0, 0.0, 0.0
 
@@ -274,7 +392,26 @@ class Noise(object):
         # oz = 0.5*(oz+1.0)
         return [ox, oy, oz]
 
-    def turbulence(self, x, y, z, octaves, lacunarity, gain):
+    def turbulence(
+        self,
+        x: float,
+        y: float,
+        z: float,
+        octaves: int,
+        lacunarity: float,
+        gain: float,
+    ) -> float:
+        """Turbulence: fBm using absolute noise values.
+
+        Args:
+            x, y, z: 3D coordinates.
+            octaves: Number of noise octaves.
+            lacunarity: Frequency multiplier per octave.
+            gain: Amplitude multiplier per octave.
+
+        Returns:
+            Turbulence value in [0, 1].
+        """
         res = 0
         amp = 1
         for i in range(octaves):
@@ -285,7 +422,26 @@ class Noise(object):
             z *= lacunarity
         return 0.5 * (res + 1.0)
 
-    def vturbulence(self, x, y, z, octaves, lacunarity, gain):
+    def vturbulence(
+        self,
+        x: float,
+        y: float,
+        z: float,
+        octaves: int,
+        lacunarity: float,
+        gain: float,
+    ) -> list[float]:
+        """Vector turbulence: summed abs(vsnoise) octaves.
+
+        Args:
+            x, y, z: 3D coordinates.
+            octaves: Number of noise octaves.
+            lacunarity: Frequency multiplier per octave.
+            gain: Amplitude multiplier per octave.
+
+        Returns:
+            [ox, oy, oz] vector components.
+        """
         amp = 1.0
         ox = 0.0
         oy = 0.0
@@ -304,7 +460,15 @@ class Noise(object):
         # oz = 0.5*(oz+1.0)
         return [ox, oy, oz]
 
-    def vsnoise(self, *args):
+    def vsnoise(self, *args: float) -> list[float] | tuple[float, float]:
+        """Vector noise.
+
+        Args:
+            *args: (x,y), (x,y,z), (x,y,z,t), or single Vector.
+
+        Returns:
+            [ox, oy] (2D), [ox, oy, oz] (3D), or [ox, oy, oz, ot] (4D).
+        """
         if len(args) == 1:
             x, y, z = args[0].x, args[0].y, args[0].z
             ox = self.noise_template(self.tabindex3, x, y, z)
@@ -341,6 +505,7 @@ class Noise(object):
 
 if __name__ == "__main__":
     import logging
+
     logging.basicConfig(level=logging.INFO)
     n = Noise()
     logging.info("%s", n.snoise(0.2, 0.2, 0.1, 0.8))

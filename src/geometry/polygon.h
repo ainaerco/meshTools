@@ -27,10 +27,11 @@ class Polygon {
      */
     Polygon(const std::vector<Vector> &points, const std::vector<int> &indices,
             const Vector &normal);
-    
+
     /**
      * @brief Triangulate the polygon into triangles
-     * @return Vector of indices forming triangles (each 3 indices form a triangle)
+     * @return Vector of indices forming triangles (each 3 indices form a
+     * triangle)
      */
     std::vector<int> triangulate() const;
 

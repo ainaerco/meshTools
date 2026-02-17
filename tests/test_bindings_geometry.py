@@ -131,7 +131,9 @@ class TestMathFunctions:
     def test_solve_cubic(self):
         # x^3 = 0 -> one root 0
         roots = solveCubic(1, 0, 0, 0)
-        assert hasattr(roots, "x") and hasattr(roots, "y") and hasattr(roots, "z")
+        assert (
+            hasattr(roots, "x") and hasattr(roots, "y") and hasattr(roots, "z")
+        )
         assert abs(roots.x) < 1e-5
 
     def test_interpolate_bezier(self):
@@ -186,8 +188,14 @@ class TestBBox:
         ]
         b = BBox()
         b.fromPointSet(pts)
-        assert abs(b.min.x) < 1e-6 and abs(b.min.y) < 1e-6 and abs(b.min.z) < 1e-6
-        assert abs(b.max.x - 1) < 1e-6 and abs(b.max.y - 1) < 1e-6 and abs(b.max.z - 1) < 1e-6
+        assert (
+            abs(b.min.x) < 1e-6 and abs(b.min.y) < 1e-6 and abs(b.min.z) < 1e-6
+        )
+        assert (
+            abs(b.max.x - 1) < 1e-6
+            and abs(b.max.y - 1) < 1e-6
+            and abs(b.max.z - 1) < 1e-6
+        )
 
     def test_axis_property(self):
         pts = [Vector(1, 0, 0), Vector(0, 1, 0), Vector(0, 0, 1)]

@@ -1,3 +1,10 @@
+"""Precomputed permutation and gradient tables for procedural Simplex noise.
+
+perm: 256-element permutation table for hash indices.
+uniform: 256-element uniform [0,1] values.
+grads2, grads3, grads4: 2D/3D/4D gradient vectors for interpolation.
+"""
+
 perm = [
     174,
     170,

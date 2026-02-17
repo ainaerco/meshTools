@@ -1,3 +1,9 @@
+"""Maya flowLoop command: flow loop operation on mesh edge selection.
+
+Registers a scripted command that operates on selected edges to perform
+flow loop. Requires Maya OpenMayaMPx.
+"""
+
 import logging
 import sys
 
